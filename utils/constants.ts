@@ -4,3 +4,13 @@ export const mailBody = {
     subject: "Hello from Mailtrap Node.js",
     text: "Plain text body",
   }
+
+
+export const SOCIAL_MEDIA = {
+  youtube: '',
+  instagram: '',
+  x: '',
+  github: 'https://github.com/Joacohj',
+  linkedin: '',
+  discord: ''
+}

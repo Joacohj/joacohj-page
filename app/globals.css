@@ -137,7 +137,7 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: oklch(0.135 0.012 260);
     --foreground: oklch(0.93 0.008 260);
@@ -167,7 +167,7 @@
     --input: oklch(0.27 0.015 260);
     --ring: oklch(0.62 0.012 260);
   }
-}
+} */
 
 @layer base {
   * {
@@ -183,4 +183,20 @@
 
 body {
   font-family: "Geist", sans-serif;
+  background-color: var(--background);
+} 
+
+
+
+.story-background {
+  background: conic-gradient(
+  from 180deg,
+  #833ab4,
+  #c13584,
+  #e1306c,
+  #fd1d1d,
+  #f77737,
+  #fcaf45,
+  #833ab4
+);
 }
