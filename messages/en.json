@@ -1,0 +1,30 @@
+{
+    "Header": {
+        "gallery": "Gallery",
+        "blogSection": "Blog Section",
+        "projects": "Projects",
+        "contact": "Contact",
+        "blog": "Blog",
+        "services": "Services",
+        "dashboard": "Dashboard",
+        "about": "About"
+    },
+    "ThemeChanger": {
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+    },
+    "Hero": {
+        "status": "Currently Building",
+        "contactSection": "Contact Section",
+        "avatarAlt": "A photo of Joaquin Alvarez",
+        "stories": "Watch my stories",
+        "presentation": "I build things, constantly learn, and document the process. This is my little corner of the internet, where I share my projects, thoughts, photos, videos, and everything else that interests me.\n\nIt's also a place to experiment, try out new ideas, and showcase what I create along the way. Not everything has to be a finished project; sometimes things are here simply because I found them interesting to make, learn from, or share.\n\nIf you'd like to get to know a little more about what I do, feel free to explore my projects, read the blog, or simply browse through the feed and see what I've been up to lately.",
+        "Badges": {
+            "webDevelopment": "Software Development",
+            "personalBlog": "Personal Blog",
+            "portfolio": "Portfolio",
+            "fitnessCoach": "Fitness Instructor"
+        }
+    }
+}

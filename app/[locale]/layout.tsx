@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/Providers/theme-provider";
+import { NextIntlClientProvider } from 'next-intl';
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
   description: "A tu chingadera",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: LayoutProps<"/[locale]">) {
   return (
     <html
       suppressHydrationWarning
@@ -30,7 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         enableSystem
         disableTransitionOnChange
       >
-        {children}
+        <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </ThemeProvider></body>
     </html>
   );

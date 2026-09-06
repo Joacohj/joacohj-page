@@ -1,0 +1,35 @@
+{
+
+    "Header": {
+        "gallery": "Galeria",
+        "blogSection": "Seccion del Blog",
+        "projects": "Proyectos",
+        "contact": "Contacto",
+        "blog" : "Blog",
+        "services": "Servicios",
+        "dashboard": "Dashboard",
+        "about": "Acerca de"
+    },
+
+    "ThemeChanger": {
+        "light": "Claro",
+        "dark": "Oscuro",
+        "system": "Sistema"
+    },
+
+    "Hero": {
+        "status": "Currently Building",
+        "contactSection": "Seccion de Contacto",
+        "avatarAlt": "Una foto de Joaquin Alvarez",
+        "stories": "Mira mis historias",
+        "presentation": "Construyo cosas, aprendo constantemente y documento el proceso. Este es mi pequeño rincón de internet, donde comparto mis proyectos, pensamientos, fotos, videos y todo aquello que me interesa.\n\nTambién es un lugar para experimentar, probar nuevas ideas y mostrar lo que voy creando a lo largo del camino. No todo tiene que ser un proyecto terminado; algunas cosas simplemente están acá porque me pareció interesante hacerlas, aprender de ellas o compartirlas.\n\nSi querés conocer un poco más de lo que hago, podés explorar mis proyectos, leer el blog o simplemente recorrer el feed y ver qué estuve haciendo últimamente.",
+        "Badges": {
+            "webDevelopment": "Desarrollo de Software",
+            "personalBlog": "Blog Personal",
+            "portfolio": "Portafolio",
+            "fitnessCoach": "Instructor Fitness"
+        }
+    }
+
+
+}

@@ -8,7 +8,7 @@ import { ModeToggle } from "@/src/components/theme-changer";
 import ImageOfMe from "@/public/images/me.png"
 import { AvatarIcon, CalendarIcon, CaretDownIcon, DashboardIcon, DiscordLogoIcon, EnvelopeClosedIcon, GitHubLogoIcon, InstagramLogoIcon, LinkedInLogoIcon, PaperPlaneIcon, VideoIcon } from '@radix-ui/react-icons'
 import { ImageIcon, Link2Icon } from "lucide-react";
-import Link from "next/link";
+
 import Image from "next/image";
 import PaginationComponent from "@/src/components/Pagination";
 import { SOCIAL_MEDIA } from "@/utils/constants";
@@ -20,7 +20,52 @@ import { Combobox } from "@/components/ui/combobox";
 import ComboboxPopup from "@/src/components/ComboBox";
 import { Textarea } from "@/components/ui/textarea";
 
+
+import { motion, type Variants } from "motion/react";
+import { useTranslations } from "next-intl";
+import { Link } from "@/src/i18n/navigation";
+
+const containerVariants: Variants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.12,
+    },
+  },
+};
+
+const badgeVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    x: -20,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.4,
+      ease: "easeOut",
+    },
+  },
+};
+const articleVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    x: 80,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeIn",
+    },
+  },
+};
+
 export default function Home() {
+  const t = useTranslations('Hero')
+  const tb = useTranslations('Hero.Badges')
   return (
     <div>
       <Header />
@@ -30,7 +75,7 @@ export default function Home() {
           <div className="w-full flex justify-between items-center text-foreground">
             <div className="font-mono text-sm flex items-center gap-3">
               <div className="h-3 w-3 rounded-full bg-green-600"></div>
-              <p className="font-extralight">Currently Building</p>
+              <p className="font-extralight">{t('status')}</p>
             </div>
 
             <div className="flex gap-2">
@@ -41,52 +86,83 @@ export default function Home() {
 
           <div className="flex flex-col mt-5">
             <h3 className="font-semibold text-2xl sm:text-5xl">Joaquin Alvarez <span>/</span> Joacohj</h3>
-            <div className="flex text-sm gap-2 mt-5 flex-wrap">
-              <div className="flex items-center justify-center px-4 py-1 rounded-md font-mono text-muted-foreground border border-accent">
-                <p>web development</p>
-              </div>
-              <div className="flex items-center justify-center px-4 py-1 rounded-md font-mono text-muted-foreground  border border-accent">
-                <p>personal blog</p>
-              </div>
-              <div className="flex items-center justify-center px-4 py-1 rounded-md font-mono text-muted-foreground border border-accent">
-                <p>portfolio</p>
-              </div>
-              <div className="flex items-center justify-center px-4 py-1 rounded-md font-mono text-muted-foreground border border-accent">
-                <p>fitness coach</p>
-              </div>
-            </div>
+            <motion.div
+              className="flex text-sm gap-2 mt-5 flex-wrap"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <motion.div
+                variants={badgeVariants}
+                className="flex items-center justify-center px-4 py-1 rounded-md font-mono text-muted-foreground border border-accent"
+              >
+                <p>{tb('webDevelopment')}</p>
+              </motion.div>
+
+              <motion.div
+                variants={badgeVariants}
+                className="flex items-center justify-center px-4 py-1 rounded-md font-mono text-muted-foreground border border-accent"
+              >
+                <p>{tb('personalBlog')}</p>
+              </motion.div>
+
+              <motion.div
+                variants={badgeVariants}
+                className="flex items-center justify-center px-4 py-1 rounded-md font-mono text-muted-foreground border border-accent"
+              >
+                <p>{tb('portfolio')}</p>
+              </motion.div>
+
+              <motion.div
+                variants={badgeVariants}
+                className="flex items-center justify-center px-4 py-1 rounded-md font-mono text-muted-foreground border border-accent"
+              >
+                <p>{tb('fitnessCoach')}</p>
+              </motion.div>
+            </motion.div>
             <div className="w-full h-0.5 rounded-2xl mt-4 bg-accent"></div>
-            <p className="pl-2 mt-5 line-clamp-8 text-pretty font-light leading-6.5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium consectetur nesciunt in officiis quidem vel dignissimos. Ipsum quisquam quibusdam labore exercitationem nemo adipisci? Reprehenderit provident quo sed quae totam eius.
-              Aliquid, distinctio. Voluptatibus neque, exercitationem ipsum unde alias?</p>
+            <p className="pl-2 mt-5 line-clamp-8 text-pretty font-light leading-6.5">{t('presentation')}</p>
           </div>
 
           <Button className="sm:w-fit w-full px-20 py-6 mt-10">
-            contact section
+            {t('contactSection')}
           </Button>
         </article>
 
-        <article className="order-1 xl:order-2 w-[300px] sm:w-[300px] flex xs:w-[300px] xl:w-[75%] h-[400px] sm:h-[450px] relative rounded-xl justify-self-center hover:scale-[100.8%] transition-all ">
-          <Link href={"/feed/stories"}>
-            <div className="hidden sm:flex story-background opacity-80 shadow-2xl shadow-red-900 absolute inset-0 rotate-[20deg] rounded-4xl"></div>
+        <article
+          // variants={articleVariants}
+          // initial="hidden"
+          // animate="visible"
+          className="order-1 xl:order-2 w-[300px] sm:w-[300px] flex xs:w-[300px] xl:w-[75%] h-[400px] sm:h-[450px] relative rounded-xl justify-self-center hover:scale-[100.8%] transition-all"
+        >
+          <Link href="/feed/stories">
+            <div className="hidden sm:flex story-background opacity-80 shadow-2xl shadow-red-900 absolute inset-0 rotate-[20deg] rounded-4xl" />
+
             <div className="bg-accent absolute opacity-95 inset-0 overflow-hidden rounded-4xl">
-              <Image loading="eager" src={ImageOfMe.src} className="w-full h-full object-cover" alt="Joaquin Alvarez" width={1200} height={800} />
+              <Image
+                loading="eager"
+                src={ImageOfMe.src}
+                className="w-full h-full object-cover"
+                alt={t('avatarAlt')}
+                width={1200}
+                height={800}
+              />
             </div>
-            <p className="hidden sm:flex  absolute z-30 -right-30 self-center top-0 bottom-0 rotate-90">
+
+            <p className="hidden sm:flex absolute z-30 -right-30 self-center top-0 bottom-0 rotate-90">
               <span className="text-foreground font-light flex items-center gap-1 underline decoration-2 decoration-accent hover:decoration-ring transition-all underline-offset-4 text-sm">
                 <AvatarIcon />
-                watch my stories
+                {t('stories')}
               </span>
             </p>
           </Link>
-
-
         </article>
       </section>
       <section className="w-full px-5 sm:px-15 xl:px-30 mt-40">
         <article className="flex flex-col my-5">
           <h4 id="gallery" className="text-2xl font-semibold sm:text-4xl">Gallery</h4>
           <p className="text-muted-foreground text-xl">Public/Multimedia/About me.</p>
-          <Link href="/joacohj/feed" className="mt-0.5  text-muted-foreground decoration-2 flex items-center"><p className="text-sm flex items-center gap-2 underline underline-offset-[6px] decoration-accent hover:decoration-ring transition-all">Click here to watch my entire feed <span className="-rotate-45"><Link2Icon width={15} height={15} /></span></p></Link>
+          <Link href="/gallery/feed" className="mt-0.5  text-muted-foreground decoration-2 flex items-center"><p className="text-sm flex items-center gap-2 underline underline-offset-[6px] decoration-accent hover:decoration-ring transition-all">Click here to watch my entire feed <span className="-rotate-45"><Link2Icon width={15} height={15} /></span></p></Link>
         </article>
 
         <article className="w-full mt-10">
@@ -98,13 +174,13 @@ export default function Home() {
         <article className="flex flex-col my-5">
           <h4 id="blog" className="text-2xl font-semibold sm:text-4xl">My Blog Section</h4>
           <p className="text-muted-foreground text-xl">Follow my posts about every thoughts here.</p>
-          <Link className="text-foreground text-2xl w-fit font-semibold" href={""}><p>Joaquin Alvarez <span>|</span> <span className="underline-offset-[6px] underline decoration-accent hover:decoration-ring transition-all">@Joacohj</span></p></Link>
+          <Link className="text-foreground text-2xl w-fit font-semibold" href={"/blog/posts/asasas"}><p>Joaquin Alvarez <span>|</span> <span className="underline-offset-[6px] underline decoration-accent hover:decoration-ring transition-all">@Joacohj</span></p></Link>
         </article>
         <div className="w-full mt-10">
           <article className="w-full xl:h-40 border-border border overflow-hidden rounded-xl bg-card grid xl:grid-cols-[1fr_250px]">
             <div className="order-2 xl-order-1 w-full px-10 py-5">
               <div className="xl:w-1/4">
-                <Link href={""} className="text-xl text-muted-foreground">Joaquin Alvarez Portfolio</Link>
+                <Link href={"/blog/posts/asasas"} className="text-xl text-muted-foreground">Joaquin Alvarez Portfolio</Link>
                 <div className="h-0.5 w-full bg-accent my-2"></div>
               </div>
               <p className="line-clamp-2 w-2/3 text-muted-foreground font-light ">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempora amet quam neque! Rerum ducimus voluptate obcaecati commodi officia neque eligendi voluptatem molestias in? Sit impedit eum itaque voluptate deserunt. Ad?</p>
