@@ -94,7 +94,7 @@ export default function Header({ enableProgress = false }: { enableProgress?: bo
                         <a href='#contact'>{t('contact')}</a>
                         <a href='#contact'>{t('blog')}</a>
                         <a href='#services'>{t('services')}</a>
-                        <Link className="flex items-center gap-2" href={"/dashboard"}><DashboardIcon />{t('dashboard')}</Link>
+                        <Link className="flex items-center gap-2" href={"/dashboard/overview"}><DashboardIcon />{t('dashboard')}</Link>
                         <ModeToggle />
                     </nav>
                     <Button className='xl:hidden flex items-center text-foreground py-4 px-4 ' variant={"ghost"}>

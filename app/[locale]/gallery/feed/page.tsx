@@ -66,7 +66,7 @@ export default function FeedPage() {
                                         </InputGroupAddon>
                                         <InputGroupAddon align="inline-end">12 results</InputGroupAddon>
                                     </InputGroup>
-                                    <DatePickerDemo/>
+                                    <DatePickerDemo />
                                 </div>
                             </PopoverHeader>
 
@@ -80,5 +80,14 @@ export default function FeedPage() {
             </article>
 
         </section>
+        <footer className="w-full mt-10 bg-background border-accent border py-10">
+            <p className="text-center  text-muted-foreground">Made with love by Joaquin Alvarez ❤</p>
+            <nav className="flex w-full justify-center gap-4 text-muted-foreground">
+                <a href="">about</a>
+                <a href="">gallery</a>
+                <a href="">blog</a>
+                <a href="">projects</a>
+            </nav>
+        </footer>
     </div>
 }
