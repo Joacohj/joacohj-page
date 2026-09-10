@@ -106,7 +106,7 @@ export function AppSidebar() {
                                     <CubeIcon />
                                     Services
                                 </div>
-                                <ChevronDown className="transition-transform group-aria-expanded:rotate-180"  />
+                                <ChevronDown className="transition-transform group-aria-expanded:rotate-180" />
                             </CollapsibleTrigger>}>
 
                             </SidebarMenuButton>
@@ -323,13 +323,15 @@ export function AppSidebar() {
                                 <Separator className="my-0.5 bg-accent h-0.5" />
 
                                 <div className="px-2">
-                                    <Button
-                                        variant="ghost"
-                                        className="w-full flex justify-start py-2 items-center"
-                                    >
-                                        <LogOutIcon />
-                                        Logout
-                                    </Button>
+                                    <a href="/logout">
+                                        <Button
+                                            variant="ghost"
+                                            className="w-full flex justify-start py-2 items-center"
+                                        >
+                                            <LogOutIcon />
+                                            Logout
+                                        </Button>
+                                    </a>
                                 </div>
                             </PopoverContent>
                         </Popover>

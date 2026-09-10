@@ -12,10 +12,6 @@ datasource db {
   provider = "postgresql"
 }
 
-model caca {
-  id     String  @id @default(uuid())
-  nombre String?
-}
 
 model User {
   id            String    @id

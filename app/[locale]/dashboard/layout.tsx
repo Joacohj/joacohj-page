@@ -22,34 +22,28 @@ export const metadata: Metadata = {
     description: "A tu chingadera",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/[locale]">) {
+export default function DashboardLayout({
+    children,
+}: LayoutProps<"/[locale]">) {
     return (
-        <html
-            suppressHydrationWarning
-            lang="en"
-            className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-        >
-            <body className="min-h-full flex flex-col">
-                <NextIntlClientProvider>
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="system"
-                        enableSystem
-                        disableTransitionOnChange
-                    >
+        <NextIntlClientProvider>
+            <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+            >
+                <SidebarProvider>
+                    <AppSidebar />
 
-                        <SidebarProvider>
-                            <AppSidebar />
-                            <SidebarTrigger />
-                            <main className="w-full">
-                                <Header />
+                    <SidebarTrigger />
 
-                                {children}
-                            </main>
-                        </SidebarProvider>
-
-                    </ThemeProvider>
-                </NextIntlClientProvider></body>
-        </html>
+                    <main className="w-full">
+                        <Header />
+                        {children}
+                    </main>
+                </SidebarProvider>
+            </ThemeProvider>
+        </NextIntlClientProvider>
     );
 }

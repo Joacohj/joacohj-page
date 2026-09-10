@@ -10,7 +10,7 @@ services:
       - "3000:3000"
     command: sleep infinity
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/myapp
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/mydb
       UPLOADTHING_TOKEN: token
       BETTER_AUTH_SECRET: Rey6zbwVyhDGg4dgB4qx/Ojr279dK18mE9eo4yNC3Zs=
       BETTER_AUTH_URL: http://localhost:3000

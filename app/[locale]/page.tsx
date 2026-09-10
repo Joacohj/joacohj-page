@@ -25,6 +25,8 @@ import { motion, type Variants } from "motion/react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/src/i18n/navigation";
 
+
+
 const containerVariants: Variants = {
   hidden: {},
   visible: {

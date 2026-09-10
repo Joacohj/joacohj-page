@@ -78,7 +78,7 @@ export default function Editor() {
           <SlashMenuPlugin />
           {anchorElem ? <DragPlugin anchorElem={anchorElem} /> : null}
         </div>
-        <div className='absolute bottom-3 right-3'><Button className=" flex items-center justify-center p-3" variant={'outline'}><SparklesIcon/></Button></div>
+        <div className='absolute bottom-3 right-3'><Button className=" flex items-center justify-center p-3" variant={'outline'}><SparklesIcon className='font-extralight'/></Button></div>
       </div>
     </LexicalExtensionComposer>
   );

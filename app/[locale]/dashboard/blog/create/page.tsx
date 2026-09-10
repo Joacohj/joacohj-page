@@ -25,11 +25,7 @@ export default function CreatePage() {
                 <Editor />
             </article>
             <article className="w-full xl:border-l border-accent xl:px-10 -mt-10 ">
-                <div className="w-full border-b border-accent py-2">
-                    <p className="text-foreground text-2xl font-light">Post Information</p>
-                    <p className="text-muted-foreground text-sm font-light">Lorem ipsum dolor sit amet.</p>
-                </div>
-                <div className="xl:max-h-[55vh] py-5 scrollbar-none overflow-auto">
+                <div className="xl:max-h-[60vh] xl:fixed py-5 scrollbar-none overflow-auto">
                     <div className="w-full">
                         <p className="text-foreground text-xl font-light">Post Banner</p>
                         <p className="text-muted-foreground text-sm font-light">Lorem ipsum dolor sit amet.</p>
@@ -37,7 +33,7 @@ export default function CreatePage() {
                     <div className="mt-5 w-full">
                         <EmptyDemo />
                     </div>
-                    <form className="w-full mt-5" action="">
+                    <form className="w-full mt-5 py-5" action="">
                         <FieldGroup>
                             <FieldGroup>
                                 <Field aria-required>
@@ -131,11 +127,13 @@ export default function CreatePage() {
                         </FieldGroup>
 
                     </form>
+                    <div className="w-full border-t border-accent py-2">
+                        <Button className="w-full mt-5 py-5">Create Post</Button>
+                    </div>
                 </div>
-               <div className="w-full border-t border-accent py-2">
-                 <Button className="w-full mt-5 py-5">Create Post</Button>
-               </div>
+
             </article>
+
         </section>
     </section>
 }

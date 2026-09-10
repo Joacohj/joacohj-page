@@ -1,24 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const locales = ["en", "es"];
-const defaultLocale = "en";
+import { i18nProxy } from "@/proxy/i18n";
+import { authProxy } from "@/proxy/auth";
 
-export default function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Ya tiene locale
-  const hasLocale = locales.some(
-    (locale) =>
-      pathname === `/${locale}` ||
-      pathname.startsWith(`/${locale}/`)
-  );
+  // Primero i18n
+  const i18nResponse = i18nProxy(request);
 
-  if (!hasLocale) {
-    const url = request.nextUrl.clone();
+  if (i18nResponse.status !== 200) {
+    return i18nResponse;
+  }
 
-    url.pathname = `/${defaultLocale}${pathname}`;
-
-    return NextResponse.redirect(url);
+  // Luego auth para dashboard
+  if (
+    pathname.startsWith("/en/dashboard") ||
+    pathname.startsWith("/es/dashboard")
+  ) {
+    return authProxy(request);
   }
 
   return NextResponse.next();
