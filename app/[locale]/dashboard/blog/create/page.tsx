@@ -20,7 +20,7 @@ export default function CreatePage() {
             <p className="text-muted-foreground">Here you can create a blog entry as post</p>
         </article>
 
-        <section className="w-full my-5 xl:mt-10 grid grid-cols-1 xl:grid-cols-[1fr_500px] gap-10">
+        <section className="w-full my-5 xl:mt-10 grid grid-cols-1 xl:grid-cols-[1fr_550px] gap-10">
             <article className="w-full">
                 <Editor />
             </article>
@@ -38,7 +38,7 @@ export default function CreatePage() {
                             <FieldGroup>
                                 <Field aria-required>
                                     <FieldLabel aria-required htmlFor="title">Title</FieldLabel>
-                                    <InputGroup>
+                                    <InputGroup className="py-5">
                                         <InputGroupInput required type="text" placeholder="Post Title" />
                                     </InputGroup>
                                 </Field>

@@ -7,6 +7,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import Header from "./components/Header";
 import { AppSidebar } from "./components/app-sidebar";
+import { Toaster } from "@/components/ui/toast";
 const geistSans = Geist({
     variable: "--font-geist-sans",
     subsets: ["latin"],
@@ -25,25 +26,16 @@ export const metadata: Metadata = {
 export default function DashboardLayout({
     children,
 }: LayoutProps<"/[locale]">) {
-    return (
-        <NextIntlClientProvider>
-            <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-                disableTransitionOnChange
-            >
-                <SidebarProvider>
-                    <AppSidebar />
+    return <SidebarProvider>
+        <AppSidebar />
 
-                    <SidebarTrigger />
+        <SidebarTrigger />
 
-                    <main className="w-full">
-                        <Header />
-                        {children}
-                    </main>
-                </SidebarProvider>
-            </ThemeProvider>
-        </NextIntlClientProvider>
-    );
+        <main className="w-full">
+            <Header />
+            {children}
+
+        </main>
+        <Toaster />
+    </SidebarProvider>
 }

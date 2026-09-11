@@ -173,9 +173,11 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   html {
     @apply font-sans;
   }
@@ -184,19 +186,43 @@
 body {
   font-family: "Geist", sans-serif;
   background-color: var(--background);
-} 
+}
 
 
 
 .story-background {
-  background: conic-gradient(
-  from 180deg,
-  #833ab4,
-  #c13584,
-  #e1306c,
-  #fd1d1d,
-  #f77737,
-  #fcaf45,
-  #833ab4
-);
+  background: conic-gradient(from 180deg,
+      #833ab4,
+      #c13584,
+      #e1306c,
+      #fd1d1d,
+      #f77737,
+      #fcaf45,
+      #833ab4);
+}
+
+
+.blurScroll {
+  animation: blurAnimation both;
+  animation-timeline: view();
+}
+
+.blurScrollPropagated>* {
+  animation: blurAnimation both;
+  animation-timeline: view();
+}
+
+@keyframes blurAnimation {
+  0% {
+    filter: blur(2px);
+  }
+
+  45%,
+  55% {
+    filter: blur(0px);
+  }
+
+  100% {
+    filter: blur(1px);
+  }
 }

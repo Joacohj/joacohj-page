@@ -2,7 +2,7 @@
 
 import { SignInForm, signInSchema } from "@/lib/schemas/auth";
 import { redirect } from "next/navigation";
-import {SignIn as SignInService} from "@/services"
+import { SignIn as SignInService } from "@/services"
 export async function SignIn(values: SignInForm) {
     const parsed = signInSchema.safeParse(values);
 

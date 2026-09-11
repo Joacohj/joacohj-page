@@ -14,3 +14,7 @@ export const SOCIAL_MEDIA = {
   linkedin: '',
   discord: ''
 }
+
+export const MAX_FILES = 20;
+export const MAX_IMAGE_SIZE = 5 * 1024 * 1024;  // 5 MB
+export const MAX_VIDEO_SIZE = 50 * 1024 * 1024; // 50 MB
