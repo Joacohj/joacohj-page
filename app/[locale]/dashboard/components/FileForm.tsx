@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
-import { ImageIcon, TrashIcon, UploadIcon } from "@radix-ui/react-icons";
-import { fi } from "date-fns/locale";
-import { useEffect, useRef, useState } from "react";
+import { ImageIcon, UploadIcon } from "@radix-ui/react-icons";
+
+import { useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import {
     DndContext,
@@ -20,6 +20,12 @@ import {
     FieldDescription,
     FieldTitle,
 } from "@/components/ui/field"
+
+export type MediaFile = {
+    id: string
+    original: File
+    current: File
+}
 import { SortableFile } from "./SortableFile";
 import { FileCarrousel } from "./FileCarrousel";
 import { FieldGroup, FieldLabel } from "@/components/ui/field";
@@ -32,8 +38,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { MAX_FILES, MAX_IMAGE_SIZE, MAX_VIDEO_SIZE } from "@/utils/constants";
 import React from "react";
 import { CarouselApi } from "@/components/ui/carousel";
-export const getFileId = (file: File) =>
-    `${file.name}-${file.lastModified}`;
+export const getFileId = (file: MediaFile) => file.id;
 export default function FileForm() {
     const [scrolled, setScrolled] = useState(false);
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -44,7 +49,7 @@ export default function FileForm() {
         Record<string, HTMLVideoElement>
     >({})
     const [isFileSelected, setIsFileSelected] = useState<boolean>(false);
-    const [files, setFiles] = useState<File[]>([]);
+    const [files, setFiles] = useState<MediaFile[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null)
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         accept: {
@@ -87,7 +92,7 @@ export default function FileForm() {
             }
 
             const existingNames = new Set(
-                files.map(file => file.name)
+                files.map(file => file.current.name)
             );
 
             // Archivos que ya existen
@@ -112,7 +117,11 @@ export default function FileForm() {
             if (filesToAdd.length > 0) {
                 setFiles(current => [
                     ...current,
-                    ...filesToAdd,
+                    ...filesToAdd.map(file => ({
+                        id: crypto.randomUUID(),
+                        original: file,
+                        current: file,
+                    })),
                 ]);
 
                 setIsFileSelected(true);
@@ -140,24 +149,23 @@ export default function FileForm() {
 
 
     function handleDragEnd(event: DragEndEvent) {
-        const { active, over } = event;
+        const { active, over } = event
 
-        if (!over || active.id === over.id) return;
+        if (!over || active.id === over.id) return
 
         const oldIndex = files.findIndex(
-            (file) => getFileId(file) === active.id
-        );
+            file => getFileId(file) === active.id
+        )
 
         const newIndex = files.findIndex(
-            (file) => getFileId(file) === over.id
-        );
+            file => getFileId(file) === over.id
+        )
 
-        setFiles((current) =>
+        setFiles(current =>
             arrayMove(current, oldIndex, newIndex)
-        );
+        )
     }
-
-    function handleRemoveFile(fileToRemove: File) {
+    function handleRemoveFile(fileToRemove: MediaFile) {
         const id = getFileId(fileToRemove)
 
         const video = videoRefs.current[id]
@@ -166,15 +174,13 @@ export default function FileForm() {
             video.pause()
             video.removeAttribute("src")
             video.load()
-
             delete videoRefs.current[id]
         }
 
-        setFiles(
-            files.filter((file) => file !== fileToRemove)
+        setFiles(current =>
+            current.filter(file => file.id !== fileToRemove.id)
         )
     }
-
     return <form >
         {files.length == 0 && <div  {...getRootProps()} className={cn("w-full h-[300px]  flex justify-center items-center border-[3px] border-dashed border-accent rounded-xl relative transition-colors", isDragActive ? 'border-input bg-accent' : '')}>
             <div className=" flex justify-center items-center flex-col absolute">
@@ -196,7 +202,7 @@ export default function FileForm() {
             </div>
         </div>}
         {files.length > 0 && <div className="w-full grid xl:grid-cols-[1fr_550px] gap-5">
-            <div className="order-2 xl:order-1">
+            <div className="order-2 xl:order-1 w-full xl:w-full sm:px-0">
 
                 <div onScroll={handleScroll} className="rounded-md  xl:px-2 pb-10 overflow-x-hidden overflow-y-auto scrollbar-none max-h-[450px]">
                     <div
@@ -215,7 +221,7 @@ export default function FileForm() {
                             <div className="flex flex-col gap-5">
                                 {files.map((file) => (
                                     <SortableFile
-                                        
+
                                         onSelect={(file) => {
                                             const index = files.findIndex(
                                                 (currentFile) =>
@@ -237,15 +243,15 @@ export default function FileForm() {
                         </SortableContext>
                     </DndContext>
                 </div>
-                <div {...getRootProps()} className="w-full py-5 flex justify-center">
-                    <Button variant={'outline'} className={'relative py-5 flex items-center gap-2'}>
+                <div {...getRootProps()} className={cn("w-full py-5 flex justify-center", files.length >= MAX_FILES ? 'hidden' : 'flex')}>
+                    <Button variant={'outline'} className={'w-full xl:w-fit relative py-5 flex items-center gap-2'}>
                         <UploadIcon /> Add more files
                         <input {...getInputProps()} type="file" multiple className="absolute inset-0 py-5 opacity" />
                     </Button>
                 </div>
             </div>
-            <div className="order-1 xl:order-1 w-full flex justify-center relative xl:max-h-[500px] overflow-auto scrollbar-none  ">
-                <div className="flex flex-col xl:px-15">
+            <div className="order-1 xl:order-1 w-full flex xl:justify-center relative xl:max-h-[500px] overflow-auto scrollbar-none  ">
+                <div className="flex w-full flex-col xl:px-15">
                     <div className="w-full h-full flex justify-center items-center">
                         <FileCarrousel api={api} setApi={setApi} setFiles={setFiles} files={files} />
                     </div>
@@ -254,9 +260,9 @@ export default function FileForm() {
                         <p className="text-muted-foreground">Lorem ipsum dolor sit.</p>
                     </div>
                     <Separator className="h-0.5 w-full bg-accent my-3" />
-                    <div>
-                        <FieldGroup>
-                            <FieldGroup>
+                    <div className="flex flex-col w-full">
+                        <FieldGroup className="w-full">
+                            <FieldGroup className="w-full">
                                 <FieldLabel htmlFor="title">Title</FieldLabel>
                                 <InputGroup className="py-5">
                                     <InputGroupInput placeholder="publication title" id='title' type="text" />

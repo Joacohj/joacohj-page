@@ -12,30 +12,38 @@ import {
     type CarouselApi,
 } from "@/components/ui/carousel"
 
+type MediaFile = {
+    id: string
+    original: File
+    current: File
+}
+
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { TrashIcon } from "@radix-ui/react-icons"
 import {
     Pause,
+    PencilIcon,
     Volume1Icon,
     VolumeOffIcon,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { getFileId } from "./FileForm"
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog"
+import { ImageEditor } from "./ImageEditor"
+import { MediaEditor } from "./media-editor/media-editor"
 
 type FileCarrouselProps = {
-    files: File[]
-    setFiles: (files: File[]) => void
-    api: CarouselApi,
+    files: MediaFile[]
+    setFiles: (files: MediaFile[]) => void
+    api: CarouselApi
     setApi: (api: CarouselApi) => void
 }
 
 type FileUrl = {
-    file: File
-    id: string
-    url: string,
-
+    mediaFile: MediaFile
+    url: string
 }
 
 export function FileCarrousel({
@@ -44,7 +52,6 @@ export function FileCarrousel({
     api,
     setApi
 }: FileCarrouselProps) {
-
     const [current, setCurrent] = React.useState(0)
     const [muted, setMuted] = React.useState(true)
     const [pause, setPaused] = React.useState(false)
@@ -68,12 +75,12 @@ export function FileCarrousel({
         previousFilesLength.current = files.length
     }, [files.length, api])
     const [fileUrls, setFileUrls] = React.useState<FileUrl[]>([])
-    const handleSelectFile = (file: File) => {
+    const handleSelectFile = (file: MediaFile) => {
         if (!api) return;
 
         const index = files.findIndex(
             (currentFile) =>
-                getFileId(currentFile) === getFileId(file)
+                currentFile.id === file.id
         );
 
         if (index === -1) return;
@@ -84,10 +91,9 @@ export function FileCarrousel({
      * Crear los ObjectURL cuando cambian los archivos
      */
     React.useEffect(() => {
-        const urls = files.map((file) => ({
-            file,
-            id: getFileId(file),
-            url: URL.createObjectURL(file),
+        const urls = files.map((mediaFile) => ({
+            mediaFile,
+            url: URL.createObjectURL(mediaFile.current),
         }))
 
         // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -99,6 +105,7 @@ export function FileCarrousel({
             })
         }
     }, [files])
+    const [editingFile, setEditingFile] = React.useState<MediaFile | null>(null)
     React.useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
@@ -140,9 +147,10 @@ export function FileCarrousel({
     }, [pause])
     React.useEffect(() => {
         const currentIds = new Set(
-            files.map((file) => getFileId(file))
+            files.map((file) => file.id)
         )
-
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        // setCurrent(files.length - 1)
         Object.entries(videoRefs.current).forEach(
             ([id, video]) => {
                 if (!currentIds.has(id)) {
@@ -154,6 +162,7 @@ export function FileCarrousel({
                 }
             }
         )
+
     }, [files])
 
     /*
@@ -194,9 +203,11 @@ export function FileCarrousel({
     /*
      * Eliminar archivo
      */
-    function handleRemoveFile(fileToRemove: File) {
-        const id = getFileId(fileToRemove)
-
+    function handleRemoveFile(mediaFileToRemove: MediaFile) {
+        const id = mediaFileToRemove.id
+        if (mediaFileToRemove == files[files.length - 1]) {
+            setCurrent(current => current - 1)
+        }
         const video = videoRefs.current[id]
 
         if (video) {
@@ -208,8 +219,10 @@ export function FileCarrousel({
         }
 
         setFiles(
-            files.filter((file) => file !== fileToRemove)
+            files.filter((mediaFile) => mediaFile.id !== id)
         )
+
+
     }
 
     /*
@@ -243,94 +256,136 @@ export function FileCarrousel({
                 setApi={setApi}
                 className="w-full"
             >
-                <CarouselContent className="xl:w-[370px]">
-                    {fileUrls.map(({ file, id, url }) => (
-                        <CarouselItem key={id}>
-                            <Card className="m-px bg-transparent ring-0">
-                                <CardContent className="relative flex aspect-square h-full w-full items-center justify-center p-0">
-                                    {file.type.startsWith("image/") ? (
-                                        <Image
-                                            className="h-full w-full rounded-xl object-cover object-center"
-                                            src={url}
-                                            width={1920}
-                                            height={1080}
-                                            alt={file.name}
-                                        />
-                                    ) : file.type.startsWith("video/") ? (
-                                        <>
-                                            <video
-                                                onClick={() => setPaused((prev) => !prev)}
+                <CarouselContent className="w-full">
+
+                    {fileUrls.map(({ mediaFile, url }) => {
+
+                        const file = mediaFile.current
+                        return (
+
+                            <CarouselItem key={mediaFile.id}>
+                                <Card className="m-px bg-transparent ring-0">
+                                    <CardContent className="relative flex aspect-square h-full w-full items-center justify-center p-0">
+                                        {file.type.startsWith("image/") ? (
+                                            <Image
                                                 className="h-full w-full rounded-xl object-cover object-center"
                                                 src={url}
-                                                muted={muted}
-                                                loop
-                                                playsInline
-                                                ref={(element) => {
-                                                    if (element) {
-                                                        videoRefs.current[id] = element
-                                                    } else {
-                                                        delete videoRefs.current[id]
-                                                    }
-                                                }}
+                                                width={1920}
+                                                height={1080}
+                                                alt={file.name}
                                             />
+                                        ) : file.type.startsWith("video/") ? (
+                                            <>
+                                                <video
+                                                    onClick={() => setPaused((prev) => !prev)}
+                                                    className="h-full w-full rounded-xl object-cover object-center"
+                                                    src={url}
+                                                    muted={muted}
+                                                    loop
+                                                    playsInline
+                                                    ref={(element) => {
+                                                        if (element) {
+                                                            videoRefs.current[mediaFile.id] = element
+                                                        } else {
+                                                            delete videoRefs.current[mediaFile.id]
+                                                        }
+                                                    }}
+                                                />
 
-                                            {/* Indicador de pausa */}
-                                            <div
-                                                className={cn(
-                                                    "pointer-events-none absolute inset-0 flex items-center justify-center",
-                                                    "transition-all duration-300 ease-out",
-                                                    pause
-                                                        ? "scale-100 opacity-100"
-                                                        : "scale-75 opacity-0"
-                                                )}
-                                            >
-                                                <div className="flex size-14 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm">
-                                                    <Pause className="size-6 fill-current" />
+                                                {/* Indicador de pausa */}
+                                                <div
+                                                    className={cn(
+                                                        "pointer-events-none absolute inset-0 flex items-center justify-center",
+                                                        "transition-all duration-300 ease-out",
+                                                        pause
+                                                            ? "scale-100 opacity-100"
+                                                            : "scale-75 opacity-0"
+                                                    )}
+                                                >
+                                                    <div className="flex size-14 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm">
+                                                        <Pause className="size-6 fill-current" />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </>
-                                    ) : null}
+                                            </>
+                                        ) : null}
 
-                                    {/* Controles */}
-                                    <div className="absolute bottom-3 right-3 flex gap-2 rounded-md bg-accent/80 p-1 px-2">
-                                        {file.type.startsWith("video/") && (
-                                            <Button
+                                        {/* Controles */}
+                                        <div className="absolute bottom-3 right-3 flex gap-2 rounded-md bg-accent/80 p-1 px-2">
+                                            {file.type.startsWith("video/") && (
+                                                <Button
+                                                    type="button"
+                                                    variant="outline"
+                                                    onClick={handleMuted}
+                                                    size="icon-sm"
+                                                >
+                                                    {muted ? (
+                                                        <VolumeOffIcon />
+                                                    ) : (
+                                                        <Volume1Icon />
+                                                    )}
+                                                </Button>
+                                            )}
+                                            {file.type.startsWith("image/") && <Button
                                                 type="button"
                                                 variant="outline"
-                                                onClick={handleMuted}
+                                                size="icon-sm"
+                                                onClick={() => setEditingFile(mediaFile)}
+                                            >
+                                                <PencilIcon />
+                                                <span className="sr-only">Edit media</span>
+                                            </Button>}
+                                            {file.type.startsWith("image/") && (
+                                                <Dialog
+                                                    open={editingFile !== null}
+                                                    onOpenChange={(open) => {
+                                                        if (!open) {
+                                                            setEditingFile(null)
+                                                        }
+                                                    }}
+                                                >
+                                                    <DialogContent className="flex h-[85vh] max-h-[720px] w-full max-w-3xl flex-col overflow-hidden">
+                                                        {editingFile && (
+                                                            <MediaEditor
+                                                                file={editingFile.current}
+                                                                onSave={(editedFile) => {
+                                                                    setFiles(
+                                                                        files.map((mediaFile) =>
+                                                                            mediaFile.id === editingFile.id
+                                                                                ? {
+                                                                                    ...mediaFile,
+                                                                                    current: editedFile,
+                                                                                }
+                                                                                : mediaFile
+                                                                        )
+                                                                    )
+
+                                                                    setEditingFile(null)
+                                                                }}
+                                                                onCancel={() => {
+                                                                    setEditingFile(null)
+                                                                }}
+                                                            />
+                                                        )}
+                                                    </DialogContent>
+                                                </Dialog>
+                                            )}
+                                            <Button
+                                                type="button"
+                                                variant="destructive"
+                                                onClick={() =>
+                                                    handleRemoveFile(mediaFile)
+                                                }
                                                 size="icon-sm"
                                             >
-                                                {muted ? (
-                                                    <VolumeOffIcon />
-                                                ) : (
-                                                    <Volume1Icon />
-                                                )}
+                                                <TrashIcon />
                                             </Button>
-                                        )}
-
-                                        <Button
-                                            type="button"
-                                            variant="destructive"
-                                            onClick={() =>
-                                                handleRemoveFile(file)
-                                            }
-                                            size="icon-sm"
-                                        >
-                                            <TrashIcon />
-                                        </Button>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </CarouselItem>
-                    ))}
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </CarouselItem>
+                        )
+                    })}
                 </CarouselContent>
-
-                {files.length > 1 && (
-                    <>
-                        <CarouselPrevious />
-                        <CarouselNext />
-                    </>
-                )}
             </Carousel>
 
             {files.length > 0 && (

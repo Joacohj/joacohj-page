@@ -23,17 +23,16 @@ import {
 
 import { cn } from "@/lib/utils";
 import { formatFileSize } from "@/utils/helpers";
-import { getFileId } from "./FileForm";
+import { getFileId, MediaFile } from "./FileForm";
 import React from "react";
 import { DragHandleDots1Icon } from "@radix-ui/react-icons";
-
-type SortableFileProps = {
-    file: File;
-    files: File[];
-    setFiles: (files: File[]) => void;
-    onRemove: (file: File) => void;
-    onSelect: (file: File) => void
-};
+interface SortableFileProps {
+    file: MediaFile
+    files: MediaFile[]
+    setFiles: React.Dispatch<React.SetStateAction<MediaFile[]>>
+    onRemove: (file: MediaFile) => void
+    onSelect: (file: MediaFile) => void
+}
 
 export function SortableFile({
     file,
@@ -116,11 +115,11 @@ export function SortableFile({
                 <ItemContent className="flex">
                     <div>
                         <ItemTitle>
-                            {file.name}
+                            {file.current.name}
                         </ItemTitle>
 
                         <ItemDescription>
-                            Size: {formatFileSize(file.size)}
+                            Size: {formatFileSize(file.current.size)}
                         </ItemDescription>
                     </div>
                 </ItemContent>
