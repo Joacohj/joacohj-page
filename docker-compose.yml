@@ -9,13 +9,14 @@ services:
     ports:
       - "3000:3000"
     command: sleep infinity
+    env_file: 
+      - .env
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/mydb
-      UPLOADTHING_TOKEN: token
-      BETTER_AUTH_SECRET: Rey6zbwVyhDGg4dgB4qx/Ojr279dK18mE9eo4yNC3Zs=
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
       BETTER_AUTH_URL: http://localhost:3000
-      GITHUB_CLIENT_ID: 
-      GITHUB_CLIENT_SECRET:
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
     volumes:
       - ./:/app
       - /app/node_modules

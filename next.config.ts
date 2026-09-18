@@ -3,7 +3,21 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 const nextConfig: NextConfig = {
   /* config options here */
-  
+    experimental: {
+    serverActions: {
+      bodySizeLimit: "1000mb",
+    },
+  },
+  images: {
+    unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.pexels.com",
+      },
+    ],
+  },
+
 };
 const withNextIntl = createNextIntlPlugin();
 export default withNextIntl(nextConfig);

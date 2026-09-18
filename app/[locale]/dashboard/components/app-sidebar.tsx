@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 'use client'
 
 import { Button } from "@/components/ui/button"
@@ -34,7 +35,7 @@ import {
     PopoverContent
 } from "@/components/ui/popover"
 
-import { ArchiveIcon, CaretSortIcon, CubeIcon, DashboardIcon, EyeClosedIcon, EyeOpenIcon, GearIcon, Pencil1Icon, Pencil2Icon } from "@radix-ui/react-icons"
+import { ArchiveIcon, CaretSortIcon, CubeIcon, DashboardIcon, EyeClosedIcon, EyeOpenIcon, GearIcon, ImageIcon, Pencil1Icon, Pencil2Icon } from "@radix-ui/react-icons"
 import { Separator } from "@base-ui/react"
 import { ChartBar, ChevronDown, GalleryThumbnailsIcon, LogOutIcon } from "lucide-react"
 import { Link } from "@/src/i18n/navigation"
@@ -61,13 +62,34 @@ export function AppSidebar() {
             </SidebarHeader>
             <Separator className="bg-accent h-0.5 w-full my-2" />
             <SidebarContent>
-                <SidebarGroup>
-                    <SidebarMenu>
+                <Collapsible defaultOpen className="group/collapsible">
+                    <SidebarGroup>
                         <SidebarMenuItem>
-                            <SidebarMenuButton render={<Link href={"/dashboard/feed"}><GalleryThumbnailsIcon /> Feed</Link>} />
+                            <SidebarMenuButton
+                                render={
+                                    <CollapsibleTrigger className="group flex justify-between">
+                                        <div className="flex gap-2">
+                                            <ArchiveIcon />
+                                            Feed
+                                        </div>
+
+                                        <ChevronDown className="transition-transform group-aria-expanded:rotate-180" />
+                                    </CollapsibleTrigger>
+                                }
+                            />
+                            <CollapsibleContent>
+                                <SidebarMenuSub>
+                                    <SidebarMenuSubItem>
+                                        <SidebarMenuButton render={<Link href={"/dashboard/feed/post/create"}><Pencil2Icon />Create Post</Link>} />
+                                    </SidebarMenuSubItem>
+                                    <SidebarMenuSubItem>
+                                        <SidebarMenuButton render={<Link href={"/dashboard/feed/gallery/overview"}><ImageIcon />Gallery Overview</Link>} />
+                                    </SidebarMenuSubItem>
+                                </SidebarMenuSub>
+                            </CollapsibleContent>
                         </SidebarMenuItem>
-                    </SidebarMenu>
-                </SidebarGroup>
+                    </SidebarGroup>
+                </Collapsible>
                 <Collapsible defaultOpen className="group/collapsible">
                     <SidebarGroup>
                         <SidebarMenuItem>
@@ -86,10 +108,10 @@ export function AppSidebar() {
                             <CollapsibleContent>
                                 <SidebarMenuSub>
                                     <SidebarMenuSubItem>
-                                        <SidebarMenuButton render={<Link href={"blog/create"}><Pencil2Icon />Create Post</Link>} />
+                                        <SidebarMenuButton render={<Link href={"/dashboard/blog/create"}><Pencil2Icon />Create Post</Link>} />
                                     </SidebarMenuSubItem>
                                     <SidebarMenuSubItem>
-                                        <SidebarMenuButton render={<Link href={"blog/analytics"}><ChartBar />Blog Analytics</Link>} />
+                                        <SidebarMenuButton render={<Link href={"/dashboard/blog/analytics"}><ChartBar />Blog Analytics</Link>} />
                                     </SidebarMenuSubItem>
                                 </SidebarMenuSub>
                             </CollapsibleContent>
@@ -323,6 +345,7 @@ export function AppSidebar() {
                                 <Separator className="my-0.5 bg-accent h-0.5" />
 
                                 <div className="px-2">
+
                                     <a href="/logout">
                                         <Button
                                             variant="ghost"

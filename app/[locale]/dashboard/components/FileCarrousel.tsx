@@ -346,6 +346,7 @@ export function FileCarrousel({
                                                     <DialogContent className="flex h-[85vh] max-h-[720px] w-full max-w-3xl flex-col overflow-hidden">
                                                         {editingFile && (
                                                             <MediaEditor
+                                                                originalFile={editingFile.original}
                                                                 file={editingFile.current}
                                                                 onSave={(editedFile) => {
                                                                     setFiles(

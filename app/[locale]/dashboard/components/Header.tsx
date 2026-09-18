@@ -46,10 +46,10 @@ export default function Header() {
                         </DropdownMenu>
                     </div>
                     <nav className="hidden xl:flex gap-8 items-center">
-                        <Link href='#contact'>Overview</Link>
+                        <Link href='/dashboard/overview'>Overview</Link>
                         <Link href='#contact'>{t('blog')}</Link>
                         <Link href='#services'>{t('services')}</Link>
-                        <Link href="/dashboard/feed">Feed</Link>
+                        <Link href="/dashboard/feed/gallery/overview">Feed</Link>
                         <ModeToggle />
                     </nav>
                     <Button className='xl:hidden flex items-center text-foreground py-4 px-4 ' variant={"ghost"}>

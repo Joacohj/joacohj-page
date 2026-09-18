@@ -1,0 +1,188 @@
+.shell {
+    display: grid;
+}
+
+.entryCard {
+    display: grid;
+    padding: 18px 2rem;
+    overflow: hidden;
+    border: 1px solid var(--color-accent);
+    border-radius: 16px;
+    background: var(--color-card);
+    box-shadow: 0 20px 42px rgba(15, 23, 42, 0.08);
+}
+
+.entryMeta {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.entryKicker,
+.entryOverlayKicker {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 6px 10px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.entryKicker {
+    color: var(--color-card-foreground);
+    background: var(--color-card);
+    border: 1px solid var(--color-accent);
+}
+
+.entryTitle {
+    margin: 12px 0 6px 0;
+    color: var(--color-foreground);
+    font-size: 1.08rem;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+}
+
+.entryCount {
+    color: var(--color-muted-foreground);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.entryBody {
+    margin: 0 0 12px 0;
+    color: var(--color-muted-foreground);
+    font-size: 0.95rem;
+    line-height: 1.65;
+}
+
+.entryMedia {
+    min-width: 0;
+}
+
+.entryMasonryImage {
+    width: 100%;
+    display: block;
+    height: auto;
+    border-radius: 16px;
+    background: var(--color-card);
+}
+
+.entryOverlay {
+    display: grid;
+    color: var(--color-foreground);
+    align-content: end;
+    /* From https://css.glass */
+    background: color-mix(in oklch, var(--color-background) 50%, transparent);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px color-mix(in oklch, var(--color-background) 5%, transparent);
+    ;
+    backdrop-filter: blur(var(--blur-xl));
+    -webkit-backdrop-filter: blur(var(--blur-xl));
+    border: 1px solid color-mix(in oklch, var(--color-accent) 50%, transparent);
+
+    border-radius: var(--radius-xl);
+    gap: 12px;
+    width: 100%;
+    min-height: 100%;
+    padding: clamp(18px, 3vw, 34px);
+    max-width: min(100%, 42rem);
+}
+
+.entryOverlayKicker {
+    color: var(--color-accent-foreground);
+    background: color-mix(in oklch, var(--color-accent) 50%, transparent);
+    width: fit-content;
+    padding: 5px 2rem;
+    border: 1px solid var(--color-input);
+}
+
+.entryOverlayTitle {
+    color: var(--color-foreground);
+    font-size: clamp(1.05rem, 1.4vw, 1.45rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+}
+
+.entryOverlayBody {
+    max-width: 34rem;
+    margin: -4px 0 0;
+    color: var(--color-foreground);
+    font-size: 0.95rem;
+    line-height: 1.58;
+}
+
+.entryOverlayMeta {
+    color: var(--color-foreground);
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.entryOverlayDescription {
+    max-width: 32rem;
+    margin: -2px 0 0;
+    color: var(--color-foreground);
+    font-size: 0.92rem;
+    line-height: 1.55;
+}
+
+
+.entryMasonryImage,
+.entryMasonryVideo {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  height: 100%;
+  border-radius: var(--radius-xl);
+  object-fit: cover;
+}
+
+.entrySkeletonMedia {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    background: var(--muted);
+}
+
+.entrySkeletonMedia::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+        90deg,
+        transparent,
+        color-mix(in oklch, var(--foreground) 6%, transparent),
+        transparent
+    );
+    animation: skeleton-shimmer 1.5s infinite;
+}
+
+@keyframes skeleton-shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.entrySliderImage {
+    border-radius: var(--radius-xl);
+}
+
+.entrySliderVideoFrame,
+.entrySliderVideoGuard,
+.entrySliderVideo {
+  height: 100%;
+  /* object-fit: fill; */
+  border-radius: var(--radius-xl);
+  width: 300px;
+}
+.entrySliderVideoGuard {
+  width: 100%;
+}

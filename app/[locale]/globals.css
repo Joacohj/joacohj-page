@@ -226,3 +226,32 @@ body {
     filter: blur(1px);
   }
 }
+.plyr:has(button[data-plyr="fullscreen"][aria-pressed="false"]) .plyr__controls {
+  width: fit-content !important;
+  align-self: flex-end;
+  justify-self: center;
+  margin-bottom: 2rem;
+  z-index: 100 !important;
+}
+
+.plyr:has(button[data-plyr="fullscreen"][aria-pressed="false"]) .plyr__video-wrapper {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  background-color: transparent !important;
+  width: 100% !important;
+  min-height: 100svh !important;
+  height: 100% !important;
+}
+
+.plyr:has(button[data-plyr="fullscreen"][aria-pressed="false"]) audio,
+.plyr:has(button[data-plyr="fullscreen"][aria-pressed="false"]) iframe,
+.plyr:has(button[data-plyr="fullscreen"][aria-pressed="false"]) video {
+  object-fit: cover !important;
+  width: auto !important;
+  height: auto !important;
+  border-radius: var(--radius-xl) !important;
+  overflow: hidden !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}

@@ -12,7 +12,6 @@ datasource db {
   provider = "postgresql"
 }
 
-
 model User {
   id            String    @id
   name          String
@@ -23,6 +22,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  posts         Post[]
 
   @@unique([email])
   @@map("user")
@@ -76,4 +76,86 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+enum MediaKind {
+  image
+  video
+}
+
+enum AllowInteractions {
+  all
+  none
+}
+
+enum PostVisibility {
+  public
+  private
+}
+
+enum FileSize {
+  small
+  medium
+  large
+}
+
+model Media {
+  id          String    @id @default(uuid())
+  width       Int
+  height      Int
+  aspectRatio Float
+  alt         String?
+  src         String
+  poster      String?
+  kind        MediaKind @default(image)
+  order       Int
+  uploadKey   String?
+  postId      String
+  post        Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title             String
+  description       String
+  allowInteractions AllowInteractions @default(all)
+  fileSize          FileSize          @default(large)
+  visibility        PostVisibility    @default(public)
+
+  topics     Topic[]
+  categoryId String
+  category   PostCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  media Media[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PostCategory {
+  id          String @id @default(uuid())
+  title       String
+  description String
+
+  posts Post[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Topic {
+  id          String @id @default(uuid())
+  title       String
+  description String
+
+  posts Post[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

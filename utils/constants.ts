@@ -5,6 +5,7 @@ export const mailBody = {
     text: "Plain text body",
   }
 
+export type FileSize = "small" | "medium" | "large";
 
 export const SOCIAL_MEDIA = {
   youtube: '',
