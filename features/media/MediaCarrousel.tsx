@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils"
 import {
     MediaFile,
     MediaItem,
-} from "./FileForm"
+} from "@/features/post/FileForm"
 
 import { Dialog, DialogContent } from "@/app/components/ui/dialog"
 import { MediaEditor } from "./media-editor/media-editor"

@@ -24,7 +24,7 @@ import {
 import { cn } from "@/lib/utils";
 import { DragHandleDots1Icon } from "@radix-ui/react-icons";
 
-import type { MediaItem } from "./FileForm";
+import type { MediaItem } from "@/features/post/FileForm";
 import { formatFileSize } from "@/hooks/utils/helpers";
 
 interface SortableMediaProps {

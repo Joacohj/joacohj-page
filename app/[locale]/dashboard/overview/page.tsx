@@ -1,7 +1,7 @@
+import { Separator } from "@/components/ui/separator";
+import { ChartBarDefault } from "@/features/dashboard/uploadthing-chart";
+import NewsletterSubscriptors from "@/features/newsletter/newsletter-subscriptors";
 
-import { Separator } from "@/app/components/ui/separator";
-import NewsletterSubscriptors from "@/sortable-media/newsletter/newsletter-subscriptors";
-import { ChartBarDefault } from "@/src/components/dashboard/components/uploadthing-chart";
 
 export default function OverviewPage() {
 

@@ -1,7 +1,7 @@
 'use client'
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldLegend } from "@/app/components/ui/field";
 import Editor from "../../../../../src/components/dashboard/components/editor/Editor";
-import { EmptyDemo } from "../../../../../src/components/dashboard/components/EmptyFile";
+import { EmptyDemo } from "@/features/blog/EmptyFile";
 import { InputGroup, InputGroupInput } from "@/app/components/ui/input-group";
 import { Textarea } from "@/app/components/ui/textarea";
 import { ComboBoxCategory } from "../../../../../src/components/dashboard/components/CategoryComboBox";
