@@ -1,9 +1,9 @@
 "use client"
 
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Field, FieldError, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+import { Button } from "@/app/components/ui/button";
+import { Checkbox } from "@/app/components/ui/checkbox";
+import { Field, FieldError, FieldGroup, FieldLabel, FieldSet } from "@/app/components/ui/field";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/app/components/ui/input-group";
 import { EnvelopeClosedIcon, EyeOpenIcon, InfoCircledIcon } from "@radix-ui/react-icons";
 import { EyeClosedIcon } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,7 +15,7 @@ import {
 } from "@/lib/schemas/auth"
 import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
-import { Spinner } from "@/components/ui/spinner";
+import { Spinner } from "@/app/components/ui/spinner";
 import { SignIn } from "@/actions";
 
 

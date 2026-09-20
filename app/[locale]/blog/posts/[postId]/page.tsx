@@ -1,15 +1,15 @@
 'use client'
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import Header from "@/src/components/Header";
+import { Button } from "@/app/components/ui/button";
+import { Progress } from "@/app/components/ui/progress";
+import Header from "@/app/components/ui/site-header";
 import { Separator } from "@base-ui/react";
 import { javascript } from '@codemirror/lang-javascript'
 import { CopyIcon } from "@radix-ui/react-icons";
 import CodeMirror from "@uiw/react-codemirror"
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
-import SkeletonPage from "./components/skeletonPage";
+import { Skeleton } from "@/app/components/ui/skeleton";
+import SkeletonPage from "../../../../../src/components/dashboard/components/blog-post-skeleton-page";
 interface Theme {
     theme: 'light' | 'dark'
 }

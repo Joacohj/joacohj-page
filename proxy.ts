@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { i18nProxy } from "@/proxy/i18n";
-import { authProxy } from "@/proxy/auth";
+import { i18nProxy } from "@/lib/proxy/i18n";
+import { authProxy } from "@/lib/proxy/auth";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;

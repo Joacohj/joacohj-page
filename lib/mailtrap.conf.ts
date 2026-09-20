@@ -1,4 +1,4 @@
-import { mailBody } from "@/utils/constants";
+import { mailBody } from "@/hooks/utils/constants";
 import { MailtrapClient } from "mailtrap";
 
 const mailtrap= new MailtrapClient({ 

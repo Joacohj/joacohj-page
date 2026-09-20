@@ -81,11 +81,21 @@ model Verification {
 enum MediaKind {
   image
   video
+  youtube
 }
 
 enum AllowInteractions {
   all
   none
+}
+
+model Newsletter {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  notices Notice[]
 }
 
 enum PostVisibility {
@@ -100,30 +110,35 @@ enum FileSize {
 }
 
 model Media {
-  id          String    @id @default(uuid())
-  width       Int
-  height      Int
-  aspectRatio Float
-  alt         String?
-  src         String
-  poster      String?
-  kind        MediaKind @default(image)
-  order       Int
-  uploadKey   String?
-  postId      String
-  post        Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  id String @id @default(uuid())
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  kind MediaKind @default(image)
+
+  src String?
+  videoId String?
+
+  poster String?
+
+  width Int?
+  height Int?
+  aspectRatio Float?
+  alt String?
+
+  order Int
+
+  postId String
+  post Post @relation(fields: [postId], references: [id])
 }
 
 model Post {
-  id     String @id @default(uuid())
+  id String @id @default(uuid())
+
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  title             String
-  description       String
+  title       String
+  description String
+
   allowInteractions AllowInteractions @default(all)
   fileSize          FileSize          @default(large)
   visibility        PostVisibility    @default(public)
@@ -133,6 +148,8 @@ model Post {
   category   PostCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
 
   media Media[]
+
+  notices Notice[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -158,4 +175,22 @@ model Topic {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Notice {
+  id String @id @default(uuid())
+
+  title        String
+  description  String
+  newsletterId String
+  newsletter   Newsletter @relation(fields: [newsletterId], references: [id], onDelete: Cascade)
+
+  postId String?
+  post   Post?   @relation(fields: [postId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([newsletterId])
+  @@index([postId])
 }

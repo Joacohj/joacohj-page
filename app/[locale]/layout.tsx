@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/Providers/theme-provider";
+import { ThemeProvider } from "@/src/components/providers/theme-provider"
 import { NextIntlClientProvider } from 'next-intl';
 
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
+import { Toaster } from "@/app/components/ui/toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,7 +47,7 @@ export default function RootLayout({ children }: LayoutProps<"/[locale]">) {
           enableSystem
           disableTransitionOnChange
         >
-          <NextIntlClientProvider>{children}</NextIntlClientProvider>
+          <NextIntlClientProvider>{children}<Toaster /></NextIntlClientProvider>
         </ThemeProvider></body>
     </html>
   );

@@ -1,6 +1,6 @@
 import sharp from "sharp";
 import type { OptimizedFile } from "../mediaOptimizer";
-import { FileSize } from "@/utils/constants";
+import { FileSize } from "@/hooks/utils/constants";
 export async function imagesOptimizer(files: File[]) {
   const arrayBuffers = await Promise.all(
     files.map((file) => file.arrayBuffer()),

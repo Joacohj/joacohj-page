@@ -1,50 +1,77 @@
-'use server'
-type PostInput = {
+"use server"
+
+import { createPost as createPostService } from "@/services"
+import {
+    createPostSchema,
+} from "@/lib/schemas/post"
+import { redirect } from "next/navigation"
+import { revalidatePath } from "next/cache"
+
+
+
+export type PostInput = {
+    allowInteractions: "none" | "all";
+    visibility: "public" | "private";
+    fileSize: "small" | "large" | "medium";
     userId: string | undefined;
     title: string;
     description: string;
     categoryId: string;
     topicIds: string[];
-    media: {
+    media: ({
+        type: "youtube";
+        url: string;
+        videoId: string;
+        order: number;
+    } | {
         poster?: string | undefined;
+        type: "video" | "image";
         file: File;
         width: number;
         height: number;
         aspectRatio: number;
         alt: string;
-        kind: "image" | "video";
         order: number;
-    }[];
+        url?: undefined;
+        videoId?: undefined;
+    })[];
 }
 
-import { createPost as createPostService } from "@/services";
-import {CreatePostFormValues, createPostSchema, mediaSchema} from "@/lib/schemas/post"
-import { redirect } from "next/navigation";
-import { locale } from "next/root-params";
-import { revalidatePath, revalidateTag } from "next/cache";
-import { MediaInput } from "@/services/post/post.service";
 export async function createPost(post: PostInput) {
-    console.log('hello world')
-    // 1. Validación runtime
-    const result1 = createPostSchema.safeParse(post);
-    const result2 = mediaSchema.safeParse(post)
-    if (!result1.success) {
+    console.log("hello world")
+
+    // Validar post
+    const postResult = createPostSchema.safeParse(post)
+
+    if (!postResult.success) {
         return {
             success: false,
-            errors: result1.error.flatten().fieldErrors,
-        };
+            errors: postResult.error.flatten().fieldErrors,
+        }
     }
 
-    const data1 = result1.data;
-    const data2 = result2.data;
-    const media: MediaInput[] = post.media.map(media => media as MediaInput)
-    const dbPost = await createPostService({categoryId: data1.categoryId, userId: post.userId ?? '', description: data1.description, media, title: data1.title, topicIds: data1.topicIds}, data1.fileSize)
-    if(dbPost?.id) {
-         revalidatePath("/en/dashboard/feed/gallery/overview")
-        return redirect("/en/dashboard/feed/gallery/overview")
+
+    const data = postResult.data
+
+    const dbPost = await createPostService(
+        {
+            categoryId: data.categoryId,
+            userId: post.userId ?? "",
+            description: data.description,
+            title: data.title,
+            topicIds: data.topicIds,
+            media: post.media,
+        },
+        data.fileSize
+    )
+
+    if (dbPost?.id) {
+        revalidatePath("/en/dashboard/feed/gallery/overview")
+
+        redirect("/en/dashboard/feed/gallery/overview")
     }
 
     return {
         success: true,
-    };
+    }
 }

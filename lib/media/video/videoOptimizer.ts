@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
 import { OptimizedFile } from "../mediaOptimizer";
-import { FileSize } from "@/utils/constants";
+import { FileSize } from "@/hooks/utils/constants";
 
 export async function compressVideo(
     file: File,

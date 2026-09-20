@@ -17,6 +17,8 @@ services:
       BETTER_AUTH_URL: http://localhost:3000
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
+      MAILTRAP_API_TOKEN: ${MAILTRAP_API_TOKEN}
+      RESEND_API_KEY: ${RESEND_API_KEY}
     volumes:
       - ./:/app
       - /app/node_modules

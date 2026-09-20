@@ -226,7 +226,9 @@ body {
     filter: blur(1px);
   }
 }
-.plyr:has(button[data-plyr="fullscreen"][aria-pressed="false"]) .plyr__controls {
+.plyr:not(.plyr--youtube):has(
+  button[data-plyr="fullscreen"][aria-pressed="false"]
+) .plyr__controls {
   width: fit-content !important;
   align-self: flex-end;
   justify-self: center;
@@ -234,7 +236,9 @@ body {
   z-index: 100 !important;
 }
 
-.plyr:has(button[data-plyr="fullscreen"][aria-pressed="false"]) .plyr__video-wrapper {
+.plyr:not(.plyr--youtube):has(
+  button[data-plyr="fullscreen"][aria-pressed="false"]
+) .plyr__video-wrapper {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
@@ -244,9 +248,17 @@ body {
   height: 100% !important;
 }
 
-.plyr:has(button[data-plyr="fullscreen"][aria-pressed="false"]) audio,
-.plyr:has(button[data-plyr="fullscreen"][aria-pressed="false"]) iframe,
-.plyr:has(button[data-plyr="fullscreen"][aria-pressed="false"]) video {
+.plyr:not(.plyr--youtube):has(
+  button[data-plyr="fullscreen"][aria-pressed="false"]
+) audio,
+
+.plyr:not(.plyr--youtube):has(
+  button[data-plyr="fullscreen"][aria-pressed="false"]
+) video,
+
+.plyr:not(.plyr--youtube):has(
+  button[data-plyr="fullscreen"][aria-pressed="false"]
+) iframe {
   object-fit: cover !important;
   width: auto !important;
   height: auto !important;
@@ -254,4 +266,21 @@ body {
   overflow: hidden !important;
   max-width: 100% !important;
   max-height: 100% !important;
+}
+
+:global(.plyr--fullscreen-enabled .plyr__video-wrapper) {
+  width: 100%;
+  height: 100%;
+}
+
+:global(.plyr--fullscreen-enabled .plyr__video-embed) {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+}
+
+:global(.plyr--fullscreen-enabled .plyr__video-embed iframe) {
+  width: 100%;
+  height: 100%;
+  border: 0;
 }

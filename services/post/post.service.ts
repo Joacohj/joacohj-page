@@ -1,6 +1,7 @@
+
 import mediaOptimizer from "@/lib/media/mediaOptimizer";
 import { prisma } from "@/lib/prisma";
-import { FileSize } from "@/utils/constants";
+import { FileSize } from "@/hooks/utils/constants";
 import { unstable_cache } from "next/cache";
 import { UTFile, UTApi } from "uploadthing/server";
 export async function getPosts(cursor: string | null, limit: number) {
@@ -11,11 +12,11 @@ export async function getPosts(cursor: string | null, limit: number) {
 
         ...(cursor
           ? {
-              skip: 1,
-              cursor: {
-                id: cursor,
-              },
-            }
+            skip: 1,
+            cursor: {
+              id: cursor,
+            },
+          }
           : {}),
 
         where: {
@@ -51,25 +52,31 @@ export async function getPosts(cursor: string | null, limit: number) {
   return getCachedPosts();
 }
 
-export type MediaInput = {
-  file: File;
-  width: number;
-  height: number;
-  aspectRatio: number;
-  alt?: string;
-  poster?: string;
-  kind: "image" | "video";
-  order: number;
-};
+export type MediaInput =
+  | {
+    type: "image" | "video"
+    file: File
+    width: number
+    height: number
+    aspectRatio: number
+    alt?: string
+    poster?: string
+    order: number
+  }
+  | {
+    type: "youtube"
+    url: string
+    videoId: string
+    order: number
+  }
 type CreatePostInput = {
-  userId: string;
-  title: string;
-  description: string;
-  categoryId: string;
-  topicIds: string[];
-  media: MediaInput[];
-};
-
+    userId: string
+    title: string
+    description: string
+    categoryId: string
+    topicIds: string[]
+    media: MediaInput[]
+}
 const utapi = new UTApi();
 
 type UploadFileInput = {
@@ -107,57 +114,149 @@ export async function UploadFiles(files: UploadFileInput[]) {
 }
 
 export async function createPost(
-  data: CreatePostInput,
-  size: FileSize = "small",
+    data: CreatePostInput,
+    size: FileSize = "small",
 ) {
-  try {
-    const postId = crypto.randomUUID();
-    const optimizedMedia = await mediaOptimizer(
-      data.media.map((media) => media.file),
-      size,
-    );
-    const uploadedFiles = await UploadFiles(
-      optimizedMedia.map((optimized, index) => ({
-        file: optimized.file,
-        category: data.categoryId,
-        postId,
-        order: data.media[index].order,
-      })),
-    );
-    const failed = uploadedFiles.some((file) => file.error !== null);
-    if (failed) {
-      throw new Error("Failed to upload one or more files");
-    }
-    return await prisma.$transaction(async (tx) => {
-      const post = await tx.post.create({
-        data: {
-          id: postId,
-          userId: data.userId,
-          title: data.title,
-          description: data.description,
-          categoryId: data.categoryId,
-          topics: { connect: data.topicIds.map((id) => ({ id })) },
-          media: {
-            create: data.media.map((media, index) => ({
-              width: media.width,
-              height: media.height,
-              aspectRatio: media.aspectRatio,
-              alt: media.alt,
-              src: uploadedFiles[index].data!.ufsUrl,
-              kind: media.kind,
-              order: media.order,
+    const postId = crypto.randomUUID()
+
+    try {
+        /*
+         * ==========================
+         * ARCHIVOS LOCALES
+         * ==========================
+         */
+
+        const fileMedia = data.media.filter(
+            (
+                media,
+            ): media is Extract<
+                MediaInput,
+                { type: "image" | "video" }
+            > => media.type === "image" || media.type === "video"
+        )
+
+        const optimizedMedia = await mediaOptimizer(
+            fileMedia.map((media) => media.file),
+            size,
+        )
+
+        /*
+         * ==========================
+         * UPLOADTHING
+         * ==========================
+         */
+
+        const uploadedFiles = await UploadFiles(
+            optimizedMedia.map((optimized, index) => ({
+                file: optimized.file,
+                category: data.categoryId,
+                postId,
+                order: fileMedia[index].order,
             })),
-          },
-        },
-        include: {
-          category: true,
-          topics: true,
-          media: { orderBy: { order: "asc" } },
-        },
-      });
-      return post;
-    });
-  } catch (error) {
-    throw error;
-  }
+        )
+
+        const failed = uploadedFiles.some(
+            (file) => file.error !== null
+        )
+
+        if (failed) {
+            throw new Error(
+                "Failed to upload one or more files"
+            )
+        }
+
+        /*
+         * ==========================
+         * CREAR POST
+         * ==========================
+         */
+
+        return await prisma.$transaction(async (tx) => {
+            const post = await tx.post.create({
+                data: {
+                    id: postId,
+                    userId: data.userId,
+                    title: data.title,
+                    description: data.description,
+                    categoryId: data.categoryId,
+
+                    topics: {
+                        connect: data.topicIds.map((id) => ({
+                            id,
+                        })),
+                    },
+
+                    media: {
+                        create: data.media.map((media) => {
+                            /*
+                             * ==========================
+                             * YOUTUBE
+                             * ==========================
+                             */
+
+                            if (media.type === "youtube") {
+                                return {
+                                    kind: "youtube",
+                                    videoId: media.videoId,
+                                    order: media.order,
+                                }
+                            }
+
+                            /*
+                             * ==========================
+                             * ARCHIVO LOCAL
+                             * ==========================
+                             */
+
+                            const fileIndex = fileMedia.findIndex(
+                                (file) =>
+                                    file.order === media.order
+                            )
+
+                            if (fileIndex === -1) {
+                                throw new Error(
+                                    `File not found for media order ${media.order}`
+                                )
+                            }
+
+                            const uploaded =
+                                uploadedFiles[fileIndex]
+
+                            if (!uploaded.data) {
+                                throw new Error(
+                                    `Upload failed for media order ${media.order}`
+                                )
+                            }
+
+                            return {
+                                kind: media.type,
+                                width: media.width,
+                                height: media.height,
+                                aspectRatio: media.aspectRatio,
+                                alt: media.alt,
+                                poster: media.poster,
+                                src: uploaded.data.ufsUrl,
+                                order: media.order,
+                            }
+                        }),
+                    },
+                },
+
+                include: {
+                    category: true,
+                    topics: true,
+                    media: {
+                        orderBy: {
+                            order: "asc",
+                        },
+                    },
+                },
+            })
+
+            return post
+        })
+    } catch (error) {
+        console.error("createPost error:", error)
+        throw error
+    }
 }

@@ -1,29 +1,33 @@
 'use client'
 
-import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import Header from "@/src/components/Header";
-import { BasicMasonry } from "@/src/components/masonry";
-import { ModeToggle } from "@/src/components/theme-changer";
+import { Button } from "@/app/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/app/components/ui/dropdown-menu";
+import Header from "@/app/components/ui/site-header";
+import { BasicMasonry } from "@/changer/shared/Masonry/masonry";
+import { ModeToggle } from "@/changer/shared/theme-changer";
 import ImageOfMe from "@/public/images/me.png"
 import { AvatarIcon, CalendarIcon, CaretDownIcon, DashboardIcon, DiscordLogoIcon, EnvelopeClosedIcon, GitHubLogoIcon, InstagramLogoIcon, LinkedInLogoIcon, PaperPlaneIcon, VideoIcon } from '@radix-ui/react-icons'
 import { ImageIcon, Link2Icon } from "lucide-react";
 
 import Image from "next/image";
-import PaginationComponent from "@/src/components/Pagination";
-import { SOCIAL_MEDIA } from "@/utils/constants";
+import PaginationComponent from "@/changer/shared/Pagination";
+import { SOCIAL_MEDIA } from "@/hooks/utils/constants";
 import { DiReact } from "react-icons/di";
-import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
-import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/app/components/ui/input-group";
+import { Field, FieldGroup, FieldLabel, FieldSet } from "@/app/components/ui/field";
 import { Input } from "@base-ui/react/input";
-import { Combobox } from "@/components/ui/combobox";
-import ComboboxPopup from "@/src/components/ComboBox";
-import { Textarea } from "@/components/ui/textarea";
+import { Combobox } from "@/app/components/ui/combobox";
+import ComboboxPopup from "@/changer/shared/ComboBox";
+import { Textarea } from "@/app/components/ui/textarea";
 
 
 import { motion, type Variants } from "motion/react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/src/i18n/navigation";
+import { Link } from "@/i18n/navigation";
+import { useState } from "react";
+import { email } from "zod";
+import { toast } from "@/app/components/ui/toast";
+import { emailSchema } from "@/lib/schemas/email";
 
 
 
@@ -66,6 +70,7 @@ const articleVariants: Variants = {
 };
 
 export default function Home() {
+  const [newsletterEmail, setNewsletterEmail] = useState<string>();
   const t = useTranslations('Hero')
   const tb = useTranslations('Hero.Badges')
   return (
@@ -308,17 +313,58 @@ export default function Home() {
             <div className="w-full">
               <p className="text-xl text-foreground font-semibold mb-4">Subscribe to my Newsleeter</p>
               <p className="text-muted-foreground text-xl font-extralight text-pretty mb-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repudiandae, molestiae?</p>
-              <InputGroup className="w-fit py-5">
-                <InputGroupInput placeholder="Email" />
-                <InputGroupAddon>
-                  <EnvelopeClosedIcon />
-                </InputGroupAddon>
-                <InputGroupAddon align={"inline-end"}>
-                  <InputGroupButton>
-                    <PaperPlaneIcon />
-                  </InputGroupButton>
-                </InputGroupAddon>
-              </InputGroup>
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                const result = emailSchema.safeParse(newsletterEmail);
+                if (!result.success) {
+                  toast.add({
+                    type: "error",
+                    description: `Invalid email.`,
+                    priority: "high",
+                  });
+
+                  return;
+                }
+                const response = await fetch("/api/newsletter/subscribe", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    email: result.data,
+                  }),
+                });
+
+                const data = await response.json();
+                console.log(data)
+                if (data.error) {
+                  toast.add({
+                    type: "error",
+                    description: `I can't subscribe the email: '${newsletterEmail} to the newsletter.`,
+                    priority: "high",
+                  });
+                } else {
+                  toast.add({
+                    type: "success",
+                    description: `You are now subscribed to the newsletter!`,
+                    priority: "high",
+                  });
+                }
+
+
+              }}>
+                <InputGroup className="w-fit py-5">
+                  <InputGroupInput value={newsletterEmail ?? ""} onChange={({ target }) => setNewsletterEmail(target.value)} placeholder="Email" />
+                  <InputGroupAddon>
+                    <EnvelopeClosedIcon />
+                  </InputGroupAddon>
+                  <InputGroupAddon align={"inline-end"}>
+                    <InputGroupButton type="submit">
+                      <PaperPlaneIcon />
+                    </InputGroupButton>
+                  </InputGroupAddon>
+                </InputGroup>
+              </form>
             </div>
           </div>
         </article>
