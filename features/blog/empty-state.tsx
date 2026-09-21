@@ -1,7 +1,7 @@
 import { ImageIcon } from "@radix-ui/react-icons"
 import { ArrowUpRightIcon } from "lucide-react"
 
-import { Button } from "@/app/components/ui/button"
+import { Button } from "@/components/ui/button"
 import {
     Empty,
     EmptyContent,
@@ -9,7 +9,7 @@ import {
     EmptyHeader,
     EmptyMedia,
     EmptyTitle,
-} from "@/app/components/ui/empty"
+} from "@/components/ui/empty"
 
 export function EmptyDemo() {
     return (

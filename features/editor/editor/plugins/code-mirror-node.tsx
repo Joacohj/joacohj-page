@@ -5,7 +5,7 @@ import {
   type SerializedLexicalNode,
 } from 'lexical';
 import type { ReactElement } from 'react';
-import { CodeMirrorEditor } from '../../CodeMirror';
+import { CodeMirrorEditor } from '../../code-mirror';
 
 
 export type SerializedCodeMirrorNode = SerializedLexicalNode & {

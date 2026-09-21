@@ -1,10 +1,57 @@
 
-import mediaOptimizer from "@/lib/media/mediaOptimizer";
+import mediaOptimizer from "@/lib/media/media-optimizer";
 import { prisma } from "@/lib/prisma";
 import { FileSize } from "@/hooks/utils/constants";
 import { unstable_cache } from "next/cache";
 import { UTFile, UTApi } from "uploadthing/server";
 export async function getPosts(cursor: string | null, limit: number) {
+  const getCachedPosts = unstable_cache(
+    async () => {
+      return prisma.post.findMany({
+        take: limit + 1,
+
+        ...(cursor
+          ? {
+            skip: 1,
+            cursor: {
+              id: cursor,
+            },
+          }
+          : {}),
+
+        where: {
+          media: {
+            some: {},
+          },
+        },
+
+        orderBy: {
+          createdAt: "desc",
+        },
+
+        include: {
+          category: true,
+          topics: true,
+          media: {
+            orderBy: {
+              order: "asc",
+            },
+          },
+        },
+      });
+    },
+
+    ["gallery-posts", cursor ?? "first-page", String(limit)],
+
+    {
+      revalidate: 60,
+    },
+  );
+
+  return getCachedPosts();
+}
+
+export async function getPublicPosts(cursor: string | null, limit: number) {
   const getCachedPosts = unstable_cache(
     async () => {
       return prisma.post.findMany({
@@ -52,6 +99,44 @@ export async function getPosts(cursor: string | null, limit: number) {
   return getCachedPosts();
 }
 
+export async function getPublicPost(postId: string) {
+  const getCachedPosts = unstable_cache(
+    async () => {
+      return prisma.post.findFirst({
+        where: {
+          id: postId,
+          visibility: "public",
+          media: {
+            some: {},
+          },
+        },
+
+        orderBy: {
+          createdAt: "desc",
+        },
+
+        include: {
+          category: true,
+          topics: true,
+          media: {
+            orderBy: {
+              order: "asc",
+            },
+          },
+        },
+      });
+    },
+
+    ["gallery-posts"],
+
+    {
+      revalidate: 60,
+    },
+  );
+
+  return getCachedPosts();
+}
+
 export type MediaInput =
   | {
     type: "image" | "video"
@@ -72,6 +157,8 @@ export type MediaInput =
 type CreatePostInput = {
     userId: string
     title: string
+    visibility: "public" | "private"
+    allowInteractions: "all" | "none"
     description: string
     categoryId: string
     topicIds: string[]
@@ -178,6 +265,8 @@ export async function createPost(
                     userId: data.userId,
                     title: data.title,
                     description: data.description,
+                    visibility: data.visibility,
+                    allowInteractions: data.allowInteractions,
                     categoryId: data.categoryId,
 
                     topics: {

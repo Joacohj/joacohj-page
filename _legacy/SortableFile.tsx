@@ -10,9 +10,9 @@ import {
     ItemMedia,
     ItemTitle,
     ItemActions,
-} from "@/app/components/ui/item";
+} from "@/components/ui/item";
 
-import { Button } from "@/app/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 import {
     ArrowDownToLine,
@@ -23,7 +23,7 @@ import {
 
 import { cn } from "@/lib/utils";
 import { formatFileSize } from "@/hooks/utils/helpers";
-import { getFileId, MediaFile } from "./FileForm";
+import { getFileId, MediaFile } from "./post-form";
 import React from "react";
 import { DragHandleDots1Icon } from "@radix-ui/react-icons";
 interface SortableFileProps {

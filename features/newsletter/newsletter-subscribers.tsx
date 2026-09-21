@@ -1,5 +1,5 @@
 'use client'
-import { Skeleton } from "@/app/components/ui/skeleton"
+import { Skeleton } from "@/components/ui/skeleton"
 import { useEffect, useState } from "react"
 type Subscriptor = {
     email: string,

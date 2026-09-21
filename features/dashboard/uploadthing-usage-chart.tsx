@@ -7,7 +7,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/app/components/ui/card";
+} from "@/components/ui/card";
 import { getUploadThingUsage } from "@/actions/uploadthing/usage";
 type UploadThingUsage = {
   appTotalBytes: number;

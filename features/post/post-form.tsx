@@ -1,6 +1,6 @@
-import { Button } from "@/app/components/ui/button";
-import { Separator } from "@/app/components/ui/separator";
-import { toast } from "@/app/components/ui/toast";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { toast } from "@/components/ui/toast";
 import { cn, getMediaMetadata } from "@/lib/utils";
 import { ImageIcon, PaperPlaneIcon, UploadIcon } from "@radix-ui/react-icons";
 import { Controller, useForm } from "react-hook-form";
@@ -21,7 +21,7 @@ import {
   FieldDescription,
   FieldError,
   FieldTitle,
-} from "@/app/components/ui/field";
+} from "@/components/ui/field";
 
 export type MediaFile = {
   id: string;
@@ -42,10 +42,10 @@ export type MediaItem =
     videoId: string;
   };
 
-import { FieldGroup, FieldLabel } from "@/app/components/ui/field";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@/app/components/ui/input-group";
-import { RadioGroup, RadioGroupItem } from "@/app/components/ui/radio-group";
-import { Textarea } from "@/app/components/ui/textarea";
+import { FieldGroup, FieldLabel } from "@/components/ui/field";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Combobox,
   ComboboxChip,
@@ -58,19 +58,20 @@ import {
   ComboboxTrigger,
   ComboboxValue,
   useComboboxAnchor,
-} from "@/app/components/ui/combobox";
+} from "@/components/ui/combobox";
 import { ChevronDown } from "lucide-react";
-import { Checkbox } from "@/app/components/ui/checkbox";
+import { Checkbox } from "@/components/ui/checkbox";
 import { MAX_FILES, MAX_IMAGE_SIZE, MAX_VIDEO_SIZE } from "@/hooks/utils/constants";
 import React from "react";
-import { CarouselApi } from "@/app/components/ui/carousel";
+import { CarouselApi } from "@/components/ui/carousel";
 import { useSession } from "@/lib/auth-client";
 import { createPost } from "@/actions";
-import { Spinner } from "@/app/components/ui/spinner";
+import { Spinner } from "@/components/ui/spinner";
 import { getYoutubeVideoId } from "@/hooks/utils/helpers";
+import { MediaCarrousel } from "../media/media-carousel";
+import { SortableMedia } from "../media/sortable-media";
+import { unstable_rethrow } from "next/navigation";
 
-import { MediaCarrousel } from "./MediaCarrousel";
-import { SortableMedia } from "./SortableMedia";
 export const getFileId = (file: MediaFile) => file.id;
 
 
@@ -362,13 +363,11 @@ export default function FileForm() {
         media: postMedia,
       };
 
-      console.log(post)
-      const response = await createPost(post);
-
-      console.log(response)
+      await createPost(post);
     } catch (error) {
-      console.error(error);
+      unstable_rethrow(error); // si es redirect/notFound, lo relanza y no sigue
 
+      console.error(error);
       toast.add({
         type: "error",
         description: "No se pudo preparar uno de los archivos.",
@@ -900,7 +899,6 @@ export default function FileForm() {
                     ? "Creating publication and Uploading Files..."
                     : "Create Publication"}
                 </Button>
-                <div className="absolute bottom-0 border border-accent rounded-t-sm h-12.5 w-full bg-background/90 blur-xl shadow-2xl backdrop-blur-xl"></div>
               </div>
             </div>
           </div>

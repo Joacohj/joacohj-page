@@ -6,7 +6,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/app/components/ui/pagination"
+} from "@/components/ui/pagination"
 
 export default function PaginationComponent() {
   return (

@@ -2,13 +2,13 @@
 
 import * as React from "react"
 
-import { Card, CardContent } from "@/app/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import {
     Carousel,
     CarouselContent,
     CarouselItem,
     type CarouselApi,
-} from "@/app/components/ui/carousel"
+} from "@/components/ui/carousel"
 
 type MediaFile = {
     id: string
@@ -17,7 +17,7 @@ type MediaFile = {
 }
 
 import Image from "next/image"
-import { Button } from "@/app/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { TrashIcon } from "@radix-ui/react-icons"
 import {
     Pause,
@@ -28,7 +28,7 @@ import {
 
 import { cn } from "@/lib/utils"
 
-import { Dialog, DialogContent } from "@/app/components/ui/dialog"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
 
 import { MediaEditor } from "./media-editor/media-editor"
 

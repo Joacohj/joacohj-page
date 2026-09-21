@@ -9,8 +9,8 @@ import {
 import { useCallback, useMemo, useState } from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { type BlockOption, getBlockOptions, ICON_URLS } from './blockOptions';
-import { ImageDropzone } from '../../ImageDropzone';
+import { type BlockOption, getBlockOptions, ICON_URLS } from './block-options';
+import { ImageDropzone } from '@/features/media/image-dropzone';
 
 export function SlashMenuPlugin() {
     const [showImageDropzone, setShowImageDropzone] = useState(false);

@@ -6,8 +6,8 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/app/components/ui/dialog"
-import { TooltipProvider } from "@/app/components/ui/tooltip"
+} from "@/components/ui/dialog"
+import { TooltipProvider } from "@/components/ui/tooltip"
 
 
 

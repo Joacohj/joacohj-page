@@ -1,6 +1,6 @@
 "use client";
+import EntriesMasonry from "@/components/shared/masonry/dashboard-masonry";
 import { useEffect, useState } from "react";
-import EntriesMasonry from "../../../../../../changer/shared/Masonry/Masonry";
 
 export type MediaFile = {
   id: string;

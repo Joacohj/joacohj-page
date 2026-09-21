@@ -2,7 +2,7 @@
 
 import { useLocale } from 'next-intl';
 import { usePathname, useRouter } from '../../i18n/navigation';
-import { Button } from '@/app/components/ui/button';
+import { Button } from '../ui/button';
 
 export function LanguageSwitcher() {
     const locale = useLocale();

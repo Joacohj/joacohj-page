@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@/app/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { ASPECT_RATIOS, type AspectRatioPreset } from "./media-editor-utils"
 
 interface AspectRatioPanelProps {

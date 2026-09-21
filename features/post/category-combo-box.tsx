@@ -1,5 +1,5 @@
 "use client"
-import { Button } from "@/app/components/ui/button"
+import { Button } from "@/components/ui/button"
 import {
     Combobox,
     ComboboxChip,
@@ -13,7 +13,7 @@ import {
     ComboboxTrigger,
     ComboboxValue,
     useComboboxAnchor,
-} from "@/app/components/ui/combobox"
+} from "@/components/ui/combobox"
 import { ChevronDown } from "lucide-react"
 import React from "react"
 const frameworks = [

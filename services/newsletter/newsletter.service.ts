@@ -4,10 +4,11 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-import NewsletterWelcomeEmail from "@/custom-icon/emails/newletter-welcome-email";
-import sendMail from "@/lib/mails/mailSender";
+
+import sendMail from "@/lib/mails/mail-sender";
 import { render } from "@react-email/components";
 import { Prisma } from "@/generated/prisma/client";
+import NewsletterWelcomeEmail from "@/components/emails/newsletter-welcome-email";
 
 export async function createNewsletterSubscriptor(email: string) {
     try {

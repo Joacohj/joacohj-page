@@ -2,14 +2,14 @@
 
 import { RotateCcw, RotateCw, Undo2 } from "lucide-react"
 
-import { Button } from "@/app/components/ui/button"
-import { Label } from "@/app/components/ui/label"
-import { Slider } from "@/app/components/ui/slider"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import { Slider } from "@/components/ui/slider"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/app/components/ui/tooltip"
+} from "@/components/ui/tooltip"
 import { ZOOM_MAX, ZOOM_MIN, ZOOM_STEP } from "./media-editor-utils"
 
 interface ImageEditPanelProps {

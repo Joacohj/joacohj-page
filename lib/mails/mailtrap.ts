@@ -1,5 +1,5 @@
 import { MailtrapClient, MailtrapTransport, type Address } from "mailtrap";
-import { MailBody } from "./mailSender";
+import { MailBody } from "./mail-sender";
 const TOKEN = process.env.MAILTRAP_API_TOKEN!;
 
 import * as nodemailer from "nodemailer";

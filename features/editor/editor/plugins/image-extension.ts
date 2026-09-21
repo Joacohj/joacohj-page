@@ -12,7 +12,7 @@ import {
   type PasteCommandType,
 } from 'lexical';
 
-import { ImageNode, $createImageNode } from './ImageNode';
+import { ImageNode, $createImageNode } from './image-node';
 
 export type ImageUploadResult = {
   src: string;

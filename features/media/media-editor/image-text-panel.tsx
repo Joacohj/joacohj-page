@@ -10,10 +10,10 @@ import {
   Trash2,
 } from "lucide-react"
 
-import { Button } from "@/app/components/ui/button"
-import { Input } from "@/app/components/ui/input"
-import { Label } from "@/app/components/ui/label"
-import { Slider } from "@/app/components/ui/slider"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Slider } from "@/components/ui/slider"
 import {
   FONT_SIZE_MAX,
   FONT_SIZE_MIN,

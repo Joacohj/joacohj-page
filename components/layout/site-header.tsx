@@ -1,14 +1,14 @@
 'use client'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/app/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { CaretDownIcon, DashboardIcon, HamburgerMenuIcon } from "@radix-ui/react-icons"
 import { useEffect, useRef, useState } from "react"
-import { ModeToggle } from "../../../changer/shared/theme-changer"
-import { Button } from "@/app/components/ui/button"
-import { Progress } from "@/app/components/ui/progress"
+import { Button } from "@/components/ui/button"
+import { Progress } from "@/components/ui/progress"
 import { cn } from "@/lib/utils"
 import confetti from "canvas-confetti"
 import {useTranslations} from 'next-intl';
-import { Link } from "../../../i18n/navigation"
+import { Link } from "@/i18n/navigation"
+import { ModeToggle } from "./theme-changer"
 export default function Header({ enableProgress = false }: { enableProgress?: boolean }) {
     const t = useTranslations('Header')
     const [scrolled, setScrolled] = useState(false)

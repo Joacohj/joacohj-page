@@ -1,16 +1,16 @@
 'use client'
-import { Field, FieldDescription, FieldGroup, FieldLabel, FieldLegend } from "@/app/components/ui/field";
-import Editor from "../../../../../src/components/dashboard/components/editor/Editor";
-import { EmptyDemo } from "@/features/blog/EmptyFile";
-import { InputGroup, InputGroupInput } from "@/app/components/ui/input-group";
-import { Textarea } from "@/app/components/ui/textarea";
-import { ComboBoxCategory } from "../../../../../src/components/dashboard/components/CategoryComboBox";
-import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/app/components/ui/dialog";
-import { Button } from "@/app/components/ui/button";
-import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxItem, ComboboxList, ComboboxTrigger, ComboboxValue } from "@/app/components/ui/combobox";
+import { Field, FieldDescription, FieldGroup, FieldLabel, FieldLegend } from "@/components/ui/field";
+import { EmptyDemo } from "@/features/blog/empty-state";
+import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
+import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxItem, ComboboxList, ComboboxTrigger, ComboboxValue } from "@/components/ui/combobox";
 import { ChevronDown } from "lucide-react";
 import { Separator } from "@base-ui/react";
-import { Checkbox } from "@/app/components/ui/checkbox";
+import { Checkbox } from "@/components/ui/checkbox";
+import Editor from "@/features/editor/editor/rich-text-editor";
+import { ComboBoxCategory } from "@/features/post/category-combo-box";
 
 
 export default function CreatePage() {

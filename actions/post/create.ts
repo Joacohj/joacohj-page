@@ -60,7 +60,10 @@ export async function createPost(post: PostInput) {
             description: data.description,
             title: data.title,
             topicIds: data.topicIds,
+            visibility: data.visibility,
+            allowInteractions: data.allowInteractions,
             media: post.media,
+            
         },
         data.fileSize
     )

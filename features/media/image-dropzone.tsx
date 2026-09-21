@@ -7,9 +7,9 @@ import {
   $isRangeSelection,
   type LexicalEditor,
 } from 'lexical';
+import { ImageUploadFunction } from '../editor/editor/plugins/image-extension';
+import { $createImageNode } from '../editor/editor/plugins/image-node';
 
-import {$createImageNode} from './editor/plugins/ImageNode';
-import type {ImageUploadFunction} from './editor/plugins/ImageExtension';
 
 type ImageDropzoneProps = {
   editor: LexicalEditor;

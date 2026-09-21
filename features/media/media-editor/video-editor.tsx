@@ -16,9 +16,9 @@
 import * as React from "react"
 import { Crop, Scissors, SlidersHorizontal, Volume2 } from "lucide-react"
 
-import { Button } from "@/app/components/ui/button"
-import { DialogClose, DialogFooter } from "@/app/components/ui/dialog"
-import { Separator } from "@/app/components/ui/separator"
+import { Button } from "@/components/ui/button"
+import { DialogClose, DialogFooter } from "@/components/ui/dialog"
+import { Separator } from "@/components/ui/separator"
 
 interface VideoEditorProps {
   file: File

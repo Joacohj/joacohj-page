@@ -12,11 +12,11 @@ import {RichTextExtension} from '@lexical/rich-text';
 import {defineExtension} from 'lexical';
 import {useState} from 'react';
 
-import {DragPlugin} from "./plugins/DragPlugin";
-import {SlashMenuPlugin} from './plugins/SlashMenuPlugin';
-import { CodeMirrorExtension } from './plugins/CodeMirrorExtension';
-import { ImageExtension } from './plugins/ImageExtension';
-import { Button } from '@/app/components/ui/button';
+import {DragPlugin} from "./plugins/drag-plugin";
+import {SlashMenuPlugin} from './plugins/slash-menu-plugin';
+import { CodeMirrorExtension } from './plugins/code-mirror-extension';
+import { ImageExtension } from './plugins/image-extension';
+import { Button } from '@/components/ui/button';
 import { SparklesIcon } from 'lucide-react';
 
 const theme = {

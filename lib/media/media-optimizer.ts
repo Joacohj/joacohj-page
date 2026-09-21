@@ -1,5 +1,5 @@
-import { compressVideo } from "./video/videoOptimizer";
-import { imageOptimizer } from "./images/imageOptimizer";
+import { compressVideo } from "./video/video-optimizer";
+import { imageOptimizer } from "./images/image-optimizer";
 import { FileSize } from "@/hooks/utils/constants";
 export type OptimizedFile = {
   file: File;

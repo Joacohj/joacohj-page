@@ -13,7 +13,7 @@ import {
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import * as ReactDOM from 'react-dom';
 
-import {type BlockOption, getBlockOptions, ICON_URLS} from './blockOptions';
+import {type BlockOption, getBlockOptions, ICON_URLS} from './block-options';
 
 const DRAG_MENU_CLASSNAME = 'nle-drag-menu';
 

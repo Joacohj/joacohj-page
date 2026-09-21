@@ -9,7 +9,7 @@ import {
   type NodeKey,
   type SerializedLexicalNode,
 } from 'lexical';
-import { ResizableImage } from '../../ResizableImage';
+import { ResizableImage } from '../../resizable-image';
 
 export type SerializedImageNode = {
   type: 'image';

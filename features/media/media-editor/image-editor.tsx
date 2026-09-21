@@ -3,9 +3,9 @@
 import * as React from "react"
 import { Loader2 } from "lucide-react"
 
-import { Button } from "@/app/components/ui/button"
-import { DialogClose, DialogFooter } from "@/app/components/ui/dialog"
-import { Separator } from "@/app/components/ui/separator"
+import { Button } from "@/components/ui/button"
+import { DialogClose, DialogFooter } from "@/components/ui/dialog"
+import { Separator } from "@/components/ui/separator"
 
 import { AspectRatioPanel } from "./aspect-ratio-panel"
 import { ImageEditPanel } from "./image-edit-panel"

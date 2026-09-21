@@ -2,11 +2,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
-import { NextIntlClientProvider } from 'next-intl';
-import { SidebarProvider, SidebarTrigger } from "@/app/components/ui/sidebar";
-import Header from "../../../src/components/dashboard/components/dashboard-header";
-import { AppSidebar } from "../../../src/components/dashboard/components/app-sidebar";
-import { Toaster } from "@/app/components/ui/toast";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/layout/app-sidebar";
+import Header from "@/components/layout/dashboard-header";
+import { Toaster } from "@/components/ui/toast";
 const geistSans = Geist({
     variable: "--font-geist-sans",
     subsets: ["latin"],

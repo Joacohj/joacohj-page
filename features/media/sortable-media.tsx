@@ -10,9 +10,9 @@ import {
     ItemMedia,
     ItemTitle,
     ItemActions,
-} from "@/app/components/ui/item";
+} from "@/components/ui/item";
 
-import { Button } from "@/app/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 import {
     ArrowDownToLine,
@@ -24,7 +24,7 @@ import {
 import { cn } from "@/lib/utils";
 import { DragHandleDots1Icon } from "@radix-ui/react-icons";
 
-import type { MediaItem } from "@/features/post/FileForm";
+import type { MediaItem } from "@/features/post/post-form";
 import { formatFileSize } from "@/hooks/utils/helpers";
 
 interface SortableMediaProps {

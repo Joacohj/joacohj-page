@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 'use client'
 
-import { Button } from "@/app/components/ui/button"
 import {
     Sidebar,
     SidebarContent,
@@ -12,37 +11,41 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarMenuSub,
-    SidebarMenuSubItem,
-} from "@/app/components/ui/sidebar"
+} from "../ui/sidebar"
 
 import {
     Avatar,
     AvatarImage,
-    AvatarFallback,
     AvatarBadge
-} from "@/app/components/ui/avatar"
+} from "../ui/avatar"
 
 import {
     Collapsible,
     CollapsibleContent,
-    CollapsibleTrigger
-} from "@/app/components/ui/collapsible"
+} from "../ui/collapsible"
 
 import {
     Popover,
     PopoverTrigger,
     PopoverContent
-} from "@/app/components/ui/popover"
+} from "../ui/popover"
 
 import { ArchiveIcon, CaretSortIcon, CubeIcon, DashboardIcon, EyeOpenIcon, GearIcon, ImageIcon, Pencil1Icon, Pencil2Icon } from "@radix-ui/react-icons"
 import { Separator } from "@base-ui/react"
 import { ChartBar, ChevronDown, LogOutIcon } from "lucide-react"
 import { Link } from "@/i18n/navigation"
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/app/components/ui/dialog"
-import { LanguageSwitcher } from "@/changer/shared/language-switcher"
-import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "@/app/components/ui/field"
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@/app/components/ui/input-group"
-import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from "@/app/components/ui/combobox"
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog"
+import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "../ui/field"
+import { InputGroup, InputGroupAddon } from "../ui/input-group"
+import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem } from "../ui/combobox"
+import { CollapsibleTrigger } from "../ui/collapsible"
+import { SidebarMenuSubItem } from "../ui/sidebar"
+import { AvatarFallback } from "../ui/avatar"
+import { Button } from "../ui/button"
+import { DialogTrigger } from "../ui/dialog"
+import { InputGroupInput } from "../ui/input-group"
+import { ComboboxList } from "../ui/combobox"
+import { LanguageSwitcher } from "./language-switcher"
 const AIProviders = ['OpenAI', 'Anthropic', 'Groq', 'Google']
 const OpenAIModels = ['GPT-6 Astra', 'GPT-5.6 Sol', 'GPT-5.6 Terra', 'GPT-5.6 Luna']
 export function AppSidebar() {

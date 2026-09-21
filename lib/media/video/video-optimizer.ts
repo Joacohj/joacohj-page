@@ -2,7 +2,7 @@ import { execa } from "execa";
 import fs from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
-import { OptimizedFile } from "../mediaOptimizer";
+import { OptimizedFile } from "../media-optimizer";
 import { FileSize } from "@/hooks/utils/constants";
 
 export async function compressVideo(

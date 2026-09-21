@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@/app/components/ui/button"
+import { Button } from "@/components/ui/button"
 import {
   Combobox,
   ComboboxContent,
@@ -10,7 +10,7 @@ import {
   ComboboxList,
   ComboboxTrigger,
   ComboboxValue,
-} from "@/app/components/ui/combobox"
+} from "@/components/ui/combobox"
 
 const countries = [
   { code: "", value: "", continent: "", label: "Select country" },

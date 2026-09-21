@@ -1,33 +1,32 @@
 'use client'
 
-import { Button } from "@/app/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/app/components/ui/dropdown-menu";
-import Header from "@/app/components/ui/site-header";
-import { BasicMasonry } from "@/changer/shared/Masonry/masonry";
-import { ModeToggle } from "@/changer/shared/theme-changer";
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+
 import ImageOfMe from "@/public/images/me.png"
-import { AvatarIcon, CalendarIcon, CaretDownIcon, DashboardIcon, DiscordLogoIcon, EnvelopeClosedIcon, GitHubLogoIcon, InstagramLogoIcon, LinkedInLogoIcon, PaperPlaneIcon, VideoIcon } from '@radix-ui/react-icons'
+import { AvatarIcon, CalendarIcon, CaretDownIcon,  DiscordLogoIcon, EnvelopeClosedIcon, GitHubLogoIcon, InstagramLogoIcon, LinkedInLogoIcon, PaperPlaneIcon, VideoIcon } from '@radix-ui/react-icons'
 import { ImageIcon, Link2Icon } from "lucide-react";
 
 import Image from "next/image";
-import PaginationComponent from "@/changer/shared/Pagination";
+
 import { SOCIAL_MEDIA } from "@/hooks/utils/constants";
 import { DiReact } from "react-icons/di";
-import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/app/components/ui/input-group";
-import { Field, FieldGroup, FieldLabel, FieldSet } from "@/app/components/ui/field";
-import { Input } from "@base-ui/react/input";
-import { Combobox } from "@/app/components/ui/combobox";
-import ComboboxPopup from "@/changer/shared/ComboBox";
-import { Textarea } from "@/app/components/ui/textarea";
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
+import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
+
+
+import { Textarea } from "@/components/ui/textarea";
 
 
 import { motion, type Variants } from "motion/react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useState } from "react";
-import { email } from "zod";
-import { toast } from "@/app/components/ui/toast";
+import { toast } from "@/components/ui/toast";
 import { emailSchema } from "@/lib/schemas/email";
+import Header from "@/components/layout/site-header";
+import { BasicMasonry } from "@/components/shared/masonry/site-post-preview-masonry";
+import PaginationComponent from "@/components/shared/pagination";
 
 
 
@@ -169,7 +168,7 @@ export default function Home() {
         <article className="flex flex-col my-5">
           <h4 id="gallery" className="text-2xl font-semibold sm:text-4xl">Gallery</h4>
           <p className="text-muted-foreground text-xl">Public/Multimedia/About me.</p>
-          <Link href="/gallery/feed" className="mt-0.5  text-muted-foreground decoration-2 flex items-center"><p className="text-sm flex items-center gap-2 underline underline-offset-[6px] decoration-accent hover:decoration-ring transition-all">Click here to watch my entire feed <span className="-rotate-45"><Link2Icon width={15} height={15} /></span></p></Link>
+          <Link href="/gallery/feed/overview" className="mt-0.5  text-muted-foreground decoration-2 flex items-center"><p className="text-sm flex items-center gap-2 underline underline-offset-[6px] decoration-accent hover:decoration-ring transition-all">Click here to watch my entire feed <span className="-rotate-45"><Link2Icon width={15} height={15} /></span></p></Link>
         </article>
 
         <article className="w-full mt-10">

@@ -6,7 +6,7 @@ import {
 import { MenuOption } from '@lexical/react/LexicalTypeaheadMenuPlugin';
 import { $createHeadingNode, $createQuoteNode } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
-import { $createCodeMirrorNode } from './CodeMirrorNode';
+import { $createCodeMirrorNode } from './code-mirror-node';
 import {
     $createParagraphNode,
     $getSelection,
