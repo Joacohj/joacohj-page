@@ -49,6 +49,7 @@ export async function imageOptimizer(
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
   const settings = {
+    thumbnail: {width: 400, height: 400, quality: 75},
     small: { width: 1280, height: 1280, quality: 70 },
     medium: { width: 1920, height: 1920, quality: 82 },
     large: { width: 2560, height: 2560, quality: 90 },

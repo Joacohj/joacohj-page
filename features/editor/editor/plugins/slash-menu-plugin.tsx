@@ -9,7 +9,7 @@ import {
 import { useCallback, useMemo, useState } from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { type BlockOption, getBlockOptions, ICON_URLS } from './block-options';
+import { type BlockOption, getBlockOptions, ICONS } from './block-options';
 import { ImageDropzone } from '@/features/media/image-dropzone';
 
 export function SlashMenuPlugin() {
@@ -79,28 +79,30 @@ export function SlashMenuPlugin() {
                         ? ReactDOM.createPortal(
                             <div className="w-[220px] overflow-hidden rounded-lg border border-solid border-input bg-card text-card-foreground shadow-[0_8px_24px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.4)]">
                                 <ul className="m-0 max-h-[220px] list-none overflow-y-auto p-1">
-                                    {options.map((option, i) => (
-                                        <li
-                                            key={option.key}
-                                            ref={option.setRefElement}
-                                            role="option"
-                                            aria-selected={selectedIndex === i}
-                                            className={`flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm text-inherit ${selectedIndex === i ? 'bg-accent' : 'hover:bg-accent'}`}
-                                            tabIndex={-1}
-                                            onMouseEnter={() => setHighlightedIndex(i)}
-                                            onClick={() => {
-                                                setHighlightedIndex(i);
-                                                selectOptionAndCleanUp(option);
-                                            }}>
-                                            <span
-                                                className="inline-block h-4 w-4 shrink-0 [background-size:contain] bg-center bg-no-repeat opacity-70 dark:invert"
-                                                style={{
-                                                    backgroundImage: `url('${ICON_URLS[option.iconKey]}')`,
+                                    {options.map((option, i) => {
+                                        const Icon = ICONS[option.iconKey];
+
+                                        return (
+                                            <li
+                                                key={option.key}
+                                                ref={option.setRefElement}
+                                                role="option"
+                                                aria-selected={selectedIndex === i}
+                                                className={`flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm text-inherit ${selectedIndex === i ? 'bg-accent' : 'hover:bg-accent'
+                                                    }`}
+                                                tabIndex={-1}
+                                                onMouseEnter={() => setHighlightedIndex(i)}
+                                                onClick={() => {
+                                                    setHighlightedIndex(i);
+                                                    selectOptionAndCleanUp(option);
                                                 }}
-                                            />
-                                            <span className="flex-1">{option.title}</span>
-                                        </li>
-                                    ))}
+                                            >
+                                                <Icon className="h-4 w-4 shrink-0 opacity-70" />
+
+                                                <span className="flex-1">{option.title}</span>
+                                            </li>
+                                        );
+                                    })}
                                 </ul>
                             </div>,
                             anchorRef.current,

@@ -1,40 +1,50 @@
 import {
   DecoratorNode,
-  type LexicalNode,
-  type NodeKey,
-  type SerializedLexicalNode,
-} from 'lexical';
-import type { ReactElement } from 'react';
-import { CodeMirrorEditor } from '../../code-mirror';
+  LexicalNode,
+  NodeKey,
+  SerializedLexicalNode,
+  Spread,
+} from "lexical";
+import { CodeMirrorEditor } from "../../code-mirror";
+import { JSX } from "react/jsx-runtime";
 
+export type SerializedCodeMirrorNode = Spread<
+  {
+    code: string;
+    language: string;
+  },
+  SerializedLexicalNode
+>;
 
-export type SerializedCodeMirrorNode = SerializedLexicalNode & {
-  type: 'codemirror';
-  version: 1;
-  code: string;
-  language: string;
-};
-
-export class CodeMirrorNode extends DecoratorNode<ReactElement> {
+export class CodeMirrorNode extends DecoratorNode<JSX.Element> {
   __code: string;
   __language: string;
 
-  static getType(): string {
-    return 'codemirror';
+  static getType() {
+    return "codemirror";
   }
 
-  static clone(node: CodeMirrorNode): CodeMirrorNode {
+  static clone(node: CodeMirrorNode) {
     return new CodeMirrorNode(
       node.__code,
       node.__language,
-      node.__key
+      node.__key,
+    );
+  }
+
+  static importJSON(
+    serializedNode: SerializedCodeMirrorNode,
+  ): CodeMirrorNode {
+    return $createCodeMirrorNode(
+      serializedNode.code,
+      serializedNode.language,
     );
   }
 
   constructor(
-    code: string = '',
-    language: string = 'javascript',
-    key?: NodeKey
+    code = "",
+    language = "javascript",
+    key?: NodeKey,
   ) {
     super(key);
 
@@ -42,28 +52,45 @@ export class CodeMirrorNode extends DecoratorNode<ReactElement> {
     this.__language = language;
   }
 
-  createDOM(): HTMLElement {
-    return document.createElement('div');
+  getCode(): string {
+    return this.getLatest().__code;
   }
 
-  updateDOM(): false {
-    return false;
+  getLanguage(): string {
+    return this.getLatest().__language;
+  }
+
+  setCode(code: string): void {
+    const writable = this.getWritable();
+    writable.__code = code;
+  }
+
+  setLanguage(language: string): void {
+    const writable = this.getWritable();
+    writable.__language = language;
   }
 
   exportJSON(): SerializedCodeMirrorNode {
     return {
-      type: 'codemirror',
+      ...super.exportJSON(),
+      type: "codemirror",
       version: 1,
-      code: this.__code,
-      language: this.__language,
+      code: this.getCode(),
+      language: this.getLanguage(),
     };
   }
 
-  decorate(): ReactElement {
+  createDOM() {
+    return document.createElement("div");
+  }
+
+  updateDOM() {
+    return false;
+  }
+
+  decorate() {
     return (
       <CodeMirrorEditor
-        code={this.__code}
-        language={this.__language}
         nodeKey={this.__key}
       />
     );
@@ -71,14 +98,14 @@ export class CodeMirrorNode extends DecoratorNode<ReactElement> {
 }
 
 export function $createCodeMirrorNode(
-  code: string = '',
-  language: string = 'javascript'
-): CodeMirrorNode {
+  code = "",
+  language = "javascript",
+) {
   return new CodeMirrorNode(code, language);
 }
 
 export function $isCodeMirrorNode(
-  node: LexicalNode | null | undefined
+  node: LexicalNode | null | undefined,
 ): node is CodeMirrorNode {
   return node instanceof CodeMirrorNode;
 }

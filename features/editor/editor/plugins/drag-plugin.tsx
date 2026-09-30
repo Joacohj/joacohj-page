@@ -1,7 +1,7 @@
 'use client'
 
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {DraggableBlockPlugin_EXPERIMENTAL} from '@lexical/react/LexicalDraggableBlockPlugin';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { DraggableBlockPlugin_EXPERIMENTAL } from '@lexical/react/LexicalDraggableBlockPlugin';
 import {
   $createParagraphNode,
   $createTextNode,
@@ -10,10 +10,12 @@ import {
   $isParagraphNode,
   $isTextNode,
 } from 'lexical';
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as ReactDOM from 'react-dom';
 
-import {type BlockOption, getBlockOptions, ICON_URLS} from './block-options';
+import { type BlockOption, getBlockOptions, ICONS } from './block-options';
+import { GripVertical } from 'lucide-react';
+import { PlusIcon } from '@radix-ui/react-icons';
 
 const DRAG_MENU_CLASSNAME = 'nle-drag-menu';
 
@@ -31,7 +33,7 @@ interface DragPluginProps {
   anchorElem: HTMLElement;
 }
 
-export function DragPlugin({anchorElem}: DragPluginProps) {
+export function DragPlugin({ anchorElem }: DragPluginProps) {
   const [editor] = useLexicalComposerContext();
   const menuRef = useRef<HTMLDivElement>(null);
   const targetLineRef = useRef<HTMLDivElement>(null);
@@ -183,12 +185,12 @@ export function DragPlugin({anchorElem}: DragPluginProps) {
       setPickerPosition(
         rect
           ? {
-              left: rect.left + rect.width + window.scrollX + 8,
-              top: rect.top + window.scrollY,
-            }
+            left: rect.left + rect.width + window.scrollX + 8,
+            top: rect.top + window.scrollY,
+          }
           : null,
       );
-      setPickerState({insertBefore: e.altKey || e.ctrlKey, targetNodeKey});
+      setPickerState({ insertBefore: e.altKey || e.ctrlKey, targetNodeKey });
       setQueryString('');
       setHighlightedIndex(0);
       setIsPickerOpen(true);
@@ -205,44 +207,46 @@ export function DragPlugin({anchorElem}: DragPluginProps) {
     <>
       {isPickerOpen && pickerPosition
         ? ReactDOM.createPortal(
-            <div
-              ref={pickerRef}
-              className="w-[230px] overflow-hidden rounded-lg border border-solid border-input bg-card text-card-foreground shadow-[0_8px_24px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.4)]"
-              style={{
-                left: pickerPosition.left,
-                position: 'absolute',
-                top: pickerPosition.top,
-                zIndex: 30,
-              }}>
-              <input
-                ref={searchInputRef}
-                className="block w-full border-0 border-b [border-bottom-style:solid] border-input bg-transparent px-3 py-2 text-[0.85rem] text-inherit outline-none"
-                placeholder="Filter blocks..."
-                value={queryString}
-                onChange={e => setQueryString(e.target.value)}
-              />
-              <ul className="m-0 max-h-[220px] list-none overflow-y-auto p-1">
-                {options.map((option, i) => (
+          <div
+            ref={pickerRef}
+            className="w-[230px] overflow-hidden rounded-lg border border-solid border-input bg-card text-card-foreground shadow-[0_8px_24px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.4)]"
+            style={{
+              left: pickerPosition.left,
+              position: 'absolute',
+              top: pickerPosition.top,
+              zIndex: 30,
+            }}>
+            <input
+              ref={searchInputRef}
+              className="block w-full border-0 border-b [border-bottom-style:solid] border-input bg-transparent px-3 py-2 text-[0.85rem] text-inherit outline-none"
+              placeholder="Filter blocks..."
+              value={queryString}
+              onChange={e => setQueryString(e.target.value)}
+            />
+            <ul className="m-0 max-h-[220px] list-none overflow-y-auto p-1">
+              {options.map((option, i) => {
+                const Icon = ICONS[option.iconKey];
+
+                return (
                   <li key={option.key}>
                     <button
                       type="button"
-                      className={`flex w-full cursor-pointer items-center gap-2 rounded-md border-0 bg-transparent px-2 py-1.5 text-left text-sm text-inherit ${highlightedIndex === i ? 'bg-accent' : 'hover:bg-accent'}`}
+                      className={`flex w-full cursor-pointer items-center gap-2 rounded-md border-0 bg-transparent px-2 py-1.5 text-left text-sm text-inherit ${highlightedIndex === i ? 'bg-accent' : 'hover:bg-accent'
+                        }`}
                       onMouseEnter={() => setHighlightedIndex(i)}
-                      onClick={() => selectOption(option)}>
-                      <span
-                        className="inline-block h-4 w-4 shrink-0 [background-size:contain] bg-center bg-no-repeat opacity-70 dark:invert"
-                        style={{
-                          backgroundImage: `url('${ICON_URLS[option.iconKey]}')`,
-                        }}
-                      />
+                      onClick={() => selectOption(option)}
+                    >
+                      <Icon className="h-4 w-4 shrink-0 opacity-70" />
+
                       {option.title}
                     </button>
                   </li>
-                ))}
-              </ul>
-            </div>,
-            document.body,
-          )
+                );
+              })}
+            </ul>
+          </div>,
+          document.body,
+        )
         : null}
       <DraggableBlockPlugin_EXPERIMENTAL
         anchorElem={anchorElem}
@@ -253,24 +257,27 @@ export function DragPlugin({anchorElem}: DragPluginProps) {
             ref={menuRef}
             className={`${DRAG_MENU_CLASSNAME} absolute top-0 left-0 z-[1] flex cursor-grab items-center gap-0.5 rounded-sm p-0.5 opacity-0 [will-change:transform,opacity] active:cursor-grabbing`}
             style={{
-              transition:
-                'transform 140ms ease-in-out, opacity 160ms ease-in-out',
-            }}>
+              transition: 'transform 140ms ease-in-out, opacity 160ms ease-in-out',
+            }}
+          >
             <button
               type="button"
-              className="flex h-[18px] w-[18px] shrink-0 cursor-pointer items-center justify-center rounded-sm border-none bg-transparent [background-size:14px_14px] bg-center bg-no-repeat opacity-50 hover:bg-accent hover:opacity-100 dark:invert "
-              style={{backgroundImage: "url('/img/plus.svg')"}}
+              className="flex h-[18px] w-[18px] shrink-0 cursor-pointer items-center justify-center rounded-sm border-none bg-transparent text-foreground opacity-50 hover:bg-accent hover:opacity-100"
               title="Click to add below (Alt/Option to add above)"
               onMouseDown={e => {
                 e.preventDefault();
                 e.stopPropagation();
               }}
               onClick={openPicker}
-            />
+            >
+              <PlusIcon className="h-3.5 w-3.5" />
+            </button>
+
             <div
-              className="h-[18px] w-[18px] cursor-grab [background-size:14px_14px] bg-center bg-no-repeat opacity-50 hover:bg-accent text-foreground hover:opacity-100 dark:invert"
-              style={{backgroundImage: "url('/img/draggable-block-menu.svg')"}}
-            />
+              className="flex h-[18px] w-[18px] cursor-grab items-center justify-center rounded-sm text-foreground opacity-50 hover:bg-accent hover:opacity-100"
+            >
+              <GripVertical className="h-3.5 w-3.5" />
+            </div>
           </div>
         }
         targetLineComponent={

@@ -1,6 +1,6 @@
 'use client'
 
-import SignInForm from "@/src/components/auth/SignIn";
+import SignInForm from "@/features/auth/sign-in-form";
 import { Separator } from "@base-ui/react";
 
 

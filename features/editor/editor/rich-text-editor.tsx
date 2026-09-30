@@ -4,16 +4,16 @@ import {
   SelectBlockExtension,
   TabIndentationExtension,
 } from '@lexical/extension';
-import {HistoryExtension} from '@lexical/history';
-import {ListExtension} from '@lexical/list';
-import {ContentEditable} from '@lexical/react/LexicalContentEditable';
-import {LexicalExtensionComposer} from '@lexical/react/LexicalExtensionComposer';
-import {RichTextExtension} from '@lexical/rich-text';
-import {defineExtension} from 'lexical';
-import {useState} from 'react';
+import { HistoryExtension } from '@lexical/history';
+import { ListExtension } from '@lexical/list';
+import { ContentEditable } from '@lexical/react/LexicalContentEditable';
+import { LexicalExtensionComposer } from '@lexical/react/LexicalExtensionComposer';
+import { RichTextExtension } from '@lexical/rich-text';
+import { defineExtension } from 'lexical';
+import { useState } from 'react';
 
-import {DragPlugin} from "./plugins/drag-plugin";
-import {SlashMenuPlugin} from './plugins/slash-menu-plugin';
+import { DragPlugin } from "./plugins/drag-plugin";
+import { SlashMenuPlugin } from './plugins/slash-menu-plugin';
 import { CodeMirrorExtension } from './plugins/code-mirror-extension';
 import { ImageExtension } from './plugins/image-extension';
 import { Button } from '@/components/ui/button';
@@ -39,7 +39,8 @@ const theme = {
     italic: 'italic',
   },
 };
-
+import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
+import { useEditorStore } from '@/app/[locale]/dashboard/blog/create/page';
 const editorExtension = defineExtension({
   dependencies: [
     RichTextExtension,
@@ -55,30 +56,39 @@ const editorExtension = defineExtension({
   namespace: '@lexical/website/notion-like-editor',
   theme,
 });
-
 export default function Editor() {
   const [anchorElem, setAnchorElem] = useState<HTMLElement | null>(null);
-
+  const setJson = useEditorStore((state => state.setJson))
   return (
     <LexicalExtensionComposer
       extension={editorExtension}
       contentEditable={null}>
-      <div className="relative w-full overflow-hidden rounded-lg border border-solid border-input bg-secondary">
-        <div className="relative" ref={setAnchorElem}>
+      <div className="relative min-w-0 max-w-full overflow-hidden rounded-lg border border-input bg-secondary">
+        <div
+          className="relative min-w-0 max-w-full"
+          ref={setAnchorElem}
+        >
           <ContentEditable
-            className="h-[600px] xl:h-[400px] overflow-y-auto px-8 py-5 outline-none"
+            className="h-[600px] w-full overflow-x-hidden overflow-y-auto px-8 py-5 outline-none xl:h-[400px]"
             aria-label="Rich text editor"
             aria-placeholder="Type '/' for commands..."
             placeholder={
-              <div className="pointer-events-none absolute top-[22px] left-8 text-[0.95rem] text-muted-foreground select-none">
+              <div className="pointer-events-none absolute top-[22px] left-8 select-none text-[0.95rem] text-muted-foreground">
                 Type &apos;/&apos; for commands...
               </div>
-            }
+            } 
+          />
+          <OnChangePlugin
+            onChange={(editorState) => {
+              const json = editorState.toJSON();
+
+              setJson(JSON.stringify(json))
+            }}
           />
           <SlashMenuPlugin />
           {anchorElem ? <DragPlugin anchorElem={anchorElem} /> : null}
         </div>
-        <div className='absolute bottom-3 right-3'><Button className=" flex items-center justify-center p-3" variant={'outline'}><SparklesIcon className='font-extralight'/></Button></div>
+        <div className='absolute bottom-3 right-3'><Button className=" flex items-center justify-center p-3" variant={'outline'}><SparklesIcon className='font-extralight' /></Button></div>
       </div>
     </LexicalExtensionComposer>
   );

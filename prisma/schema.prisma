@@ -13,16 +13,17 @@ datasource db {
 }
 
 model User {
-  id            String    @id
+  id            String     @id
   name          String
   email         String
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean    @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
   sessions      Session[]
   accounts      Account[]
   posts         Post[]
+  blogPosts     BlogPost[]
 
   @@unique([email])
   @@map("user")
@@ -110,24 +111,22 @@ enum FileSize {
 }
 
 model Media {
-  id String @id @default(uuid())
-
-  kind MediaKind @default(image)
-
-  src String?
-  videoId String?
-
-  poster String?
-
-  width Int?
-  height Int?
+  id          String    @id @default(uuid())
+  kind        MediaKind @default(image)
+  src         String?
+  videoId     String?
+  poster      String?
+  width       Int?
+  height      Int?
   aspectRatio Float?
-  alt String?
+  alt         String?
+  order       Int
 
-  order Int
+  postId String?
+  post   Post?   @relation(fields: [postId], references: [id])
 
-  postId String
-  post Post @relation(fields: [postId], references: [id])
+  blogPostId String?
+  blogPost   BlogPost? @relation(fields: [blogPostId], references: [id])
 }
 
 model Post {
@@ -160,7 +159,8 @@ model PostCategory {
   title       String
   description String
 
-  posts Post[]
+  posts     Post[]
+  blogPosts BlogPost[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -173,8 +173,10 @@ model Topic {
 
   posts Post[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  blogPost   BlogPost? @relation(fields: [blogPostId], references: [id])
+  blogPostId String?
 }
 
 model Notice {
@@ -193,4 +195,32 @@ model Notice {
 
   @@index([newsletterId])
   @@index([postId])
+}
+
+model BlogPost {
+  id String @id @default(uuid())
+
+  title       String
+  description String?
+
+  content      Json // Lexical editor state
+  contentMedia Media[] // Lexical editor state images
+  banner       String
+
+  visibility        PostVisibility    @default(public)
+  allowInteractions AllowInteractions @default(all)
+
+  categoryId String
+  category   PostCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  topics Topic[]
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+  @@index([userId])
 }

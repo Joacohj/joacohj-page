@@ -34,6 +34,6 @@ export default function DashboardLayout({
             {children}
 
         </main>
-        <Toaster />
+        <Toaster className="z-[9999]" />
     </SidebarProvider>
 }

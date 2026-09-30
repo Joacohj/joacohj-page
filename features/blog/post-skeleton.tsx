@@ -1,11 +1,11 @@
 'use client'
 
-import Header from "@/components/ui/site-header";
 import { Separator } from "@base-ui/react";
 
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import Header from "@/components/layout/site-header";
 
 export default function SkeletonPage() {
     const { theme } = useTheme()

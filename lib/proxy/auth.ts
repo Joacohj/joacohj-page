@@ -10,7 +10,7 @@ export async function authProxy(request: NextRequest) {
   if (!session) {
     const url = request.nextUrl.clone();
 
-    url.pathname = "/auth/sign-in-form";
+    url.pathname = "/auth/sign-in";
 
     return NextResponse.redirect(url);
   }

@@ -1,7 +1,7 @@
 "use client";
 import EntriesMasonry from "@/components/shared/masonry/dashboard-masonry";
 import { useEffect, useState } from "react";
-
+import "./overview.css"
 export type MediaFile = {
   id: string;
   order: number;

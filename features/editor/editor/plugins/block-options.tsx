@@ -17,25 +17,35 @@ import {
 
 
 
-export const ICON_URLS = {
-    bullet: '/img/list-ul.svg',
-    h1: '/img/type-h1.svg',
-    h2: '/img/type-h2.svg',
-    h3: '/img/type-h3.svg',
-    number: '/img/list-ol.svg',
-    paragraph: '/img/text-paragraph.svg',
-    quote: '/img/chat-square-quote.svg',
-    code: '/img/code.svg',
-    image: '/img/image.svg',
+import {
+  CodeIcon,
+  HeadingIcon,
+  ImageIcon,
+  ListBulletIcon,
+  QuoteIcon,
+  TextIcon,
+} from '@radix-ui/react-icons';
+
+
+export const ICONS = {
+  bullet: ListBulletIcon,
+  h1: HeadingIcon,
+  h2: HeadingIcon,
+  h3: HeadingIcon,
+  number: ListBulletIcon,
+  paragraph: TextIcon,
+  quote: QuoteIcon,
+  code: CodeIcon,
+  image: ImageIcon,
 } as const;
 
-export type IconKey = keyof typeof ICON_URLS;
+export type IconKey = keyof typeof ICONS;
 
 interface BlockOptionConfig {
-    iconKey: IconKey;
-    keywords?: string[];
-    onSelect: () => void;
-    isImage?: boolean;
+  iconKey: IconKey;
+  keywords?: string[];
+  onSelect: () => void;
+  isImage?: boolean;
 }
 
 export class BlockOption extends MenuOption {

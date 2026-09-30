@@ -27,6 +27,7 @@ import { emailSchema } from "@/lib/schemas/email";
 import Header from "@/components/layout/site-header";
 import { BasicMasonry } from "@/components/shared/masonry/site-post-preview-masonry";
 import PaginationComponent from "@/components/shared/pagination";
+import { Posts } from "@/components/shared/posts/site-posts";
 
 
 
@@ -69,6 +70,7 @@ const articleVariants: Variants = {
 };
 
 export default function Home() {
+  
   const [newsletterEmail, setNewsletterEmail] = useState<string>();
   const t = useTranslations('Hero')
   const tb = useTranslations('Hero.Badges')
@@ -168,11 +170,11 @@ export default function Home() {
         <article className="flex flex-col my-5">
           <h4 id="gallery" className="text-2xl font-semibold sm:text-4xl">Gallery</h4>
           <p className="text-muted-foreground text-xl">Public/Multimedia/About me.</p>
-          <Link href="/gallery/feed/overview" className="mt-0.5  text-muted-foreground decoration-2 flex items-center"><p className="text-sm flex items-center gap-2 underline underline-offset-[6px] decoration-accent hover:decoration-ring transition-all">Click here to watch my entire feed <span className="-rotate-45"><Link2Icon width={15} height={15} /></span></p></Link>
+          <Link href="/gallery/feed/" className="mt-0.5  text-muted-foreground decoration-2 flex items-center"><p className="text-sm flex items-center gap-2 underline underline-offset-[6px] decoration-accent hover:decoration-ring transition-all">Click here to watch my entire feed <span className="-rotate-45"><Link2Icon width={15} height={15} /></span></p></Link>
         </article>
 
         <article className="w-full mt-10">
-          <BasicMasonry />
+          <BasicMasonry showUrl={false} />
         </article>
 
       </section>
@@ -202,35 +204,7 @@ export default function Home() {
             <p className="text-xl font-semibold">Posts</p>
             <p className="text-muted-foreground ">these are articles I&apos;ve written on technical subjects, I mostly cover web technologies and how design intertwines with our tools.</p>
           </div>
-          <div className="flex flex-col gap-10">
-            <article className="w-full min-h-40 border-border border overflow-hidden rounded-xl bg-card grid xl:grid-cols-[1fr_250px]">
-              <div className="order-2 xl:order-1 w-full px-10 py-5">
-                <div className="xl:w-1/4">
-                  <Link href={""} className="text-xl text-muted-foreground">Joaquin Alvarez Portfolio</Link>
-                  <div className="h-0.5 w-full bg-accent my-2"></div>
-                </div>
-                <time className="flex items-center gap-1.5 text-muted-foreground my-1"><span><CalendarIcon /></span>August 19th</time>
-                <p className="line-clamp-1 w-2/3 text-muted-foreground font-light ">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempora amet quam neque! Rerum ducimus voluptate obcaecati commodi officia neque eligendi voluptatem molestias in? Sit impedit eum itaque voluptate deserunt. Ad?</p>
-              </div>
-              <div className="order-1 xl:order-2 w-full h-[200px] xl:h-full bg-accent flex justify-center items-center rounded-xl border-border border shadow-sm" >
-                <ImageIcon className="text-muted-foreground" />
-              </div>
-            </article>
-            <article className="w-full min-h-40 border-border border overflow-hidden rounded-xl bg-card grid xl:grid-cols-[1fr_250px]">
-              <div className="order-2 xl:order-1 w-full px-10 py-5">
-                <div className="xl:w-1/4">
-                  <Link href={""} className="text-xl text-muted-foreground">Joaquin Alvarez Portfolio</Link>
-                  <div className="h-0.5 w-full bg-accent my-2"></div>
-                </div>
-                <time className="flex items-center gap-1.5 text-muted-foreground my-1"><span><CalendarIcon /></span>August 19th</time>
-                <p className="line-clamp-1 w-2/3 text-muted-foreground font-light ">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempora amet quam neque! Rerum ducimus voluptate obcaecati commodi officia neque eligendi voluptatem molestias in? Sit impedit eum itaque voluptate deserunt. Ad?</p>
-              </div>
-              <div className="order-1 xl:order-2 w-full h-[200px] xl:h-full bg-accent flex justify-center items-center rounded-xl border-border border shadow-sm" >
-                <ImageIcon className="text-muted-foreground" />
-              </div>
-            </article>
-            <PaginationComponent />
-          </div>
+          <Posts/>
 
         </div>
       </section>
