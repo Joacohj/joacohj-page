@@ -9,7 +9,6 @@ import { unstable_cache } from "next/cache";
 import { UTFile, UTApi } from "uploadthing/server";
 import { generateThumbnailFromVideo } from "@/lib/media/video/media-thumbnails";
 
-
 // ============================================================
 // TYPES
 // ============================================================
@@ -51,13 +50,11 @@ type UploadFileInput = {
   type?: "media" | "thumbnail";
 };
 
-
 // ============================================================
 // UPLOADTHING
 // ============================================================
 
 const utapi = new UTApi();
-
 
 function getSafeCategory(category: string) {
   return category
@@ -67,18 +64,15 @@ function getSafeCategory(category: string) {
     .replace(/^-|-$/g, "");
 }
 
-
 function getFileExtension(file: File) {
   return file.name.includes(".")
     ? file.name.slice(file.name.lastIndexOf("."))
     : "";
 }
 
-
 export async function UploadFiles(files: UploadFileInput[]) {
   const uploadFiles = files.map(
     ({ file, category, postId, order, type = "media" }) => {
-
       const safeCategory = getSafeCategory(category);
 
       const extension = getFileExtension(file);
@@ -92,7 +86,7 @@ export async function UploadFiles(files: UploadFileInput[]) {
         type: file.type,
         customId,
       });
-    }
+    },
   );
 
   return utapi.uploadFiles(uploadFiles, {
@@ -101,15 +95,11 @@ export async function UploadFiles(files: UploadFileInput[]) {
   });
 }
 
-
 // ============================================================
 // GET POSTS
 // ============================================================
 
-export async function getPosts(
-  cursor: string | null,
-  limit: number
-) {
+export async function getPosts(cursor: string | null, limit: number) {
   const getCachedPosts = unstable_cache(
     async () => {
       return prisma.post.findMany({
@@ -151,17 +141,13 @@ export async function getPosts(
 
     {
       revalidate: 60,
-    }
+    },
   );
 
   return getCachedPosts();
 }
 
-
-export async function getPublicPosts(
-  cursor: string | null,
-  limit: number
-) {
+export async function getPublicPosts(cursor: string | null, limit: number) {
   const getCachedPosts = unstable_cache(
     async () => {
       return prisma.post.findMany({
@@ -205,12 +191,11 @@ export async function getPublicPosts(
 
     {
       revalidate: 60,
-    }
+    },
   );
 
   return getCachedPosts();
 }
-
 
 export async function getPublicPost(postId: string) {
   const getCachedPost = unstable_cache(
@@ -247,12 +232,11 @@ export async function getPublicPost(postId: string) {
 
     {
       revalidate: 60,
-    }
+    },
   );
 
   return getCachedPost();
 }
-
 
 // ============================================================
 // MEDIA HELPERS
@@ -265,29 +249,22 @@ type LocalMedia = Extract<
   }
 >;
 
-
 function getLocalMedia(media: MediaInput[]) {
   return media.filter(
     (item): item is LocalMedia =>
-      item.type === "image" ||
-      item.type === "video"
+      item.type === "image" || item.type === "video",
   );
 }
-
 
 // ============================================================
 // OPTIMIZE MEDIA
 // ============================================================
 
-async function optimizeMediaFiles(
-  media: LocalMedia[],
-  size: FileSize
-) {
+async function optimizeMediaFiles(media: LocalMedia[], size: FileSize) {
   const files = media.map((item) => item.file);
 
   return mediaOptimizer(files, size);
 }
-
 
 // ============================================================
 // GENERATE VIDEO THUMBNAILS
@@ -295,9 +272,7 @@ async function optimizeMediaFiles(
 
 async function generateVideoThumbnails(
   media: LocalMedia[],
-  optimizedMedia: Awaited<
-    ReturnType<typeof mediaOptimizer>
-  >
+  optimizedMedia: Awaited<ReturnType<typeof mediaOptimizer>>,
 ) {
   return Promise.all(
     optimizedMedia.map(async (optimized, index) => {
@@ -307,13 +282,10 @@ async function generateVideoThumbnails(
         return null;
       }
 
-      return generateThumbnailFromVideo(
-        optimized.file
-      );
-    })
+      return generateThumbnailFromVideo(optimized.file);
+    }),
   );
 }
-
 
 // ============================================================
 // PREPARE MEDIA UPLOADS
@@ -321,13 +293,10 @@ async function generateVideoThumbnails(
 
 function prepareMediaUploads(
   media: LocalMedia[],
-  optimizedMedia: Awaited<
-    ReturnType<typeof mediaOptimizer>
-  >,
+  optimizedMedia: Awaited<ReturnType<typeof mediaOptimizer>>,
   category: string,
-  postId: string
+  postId: string,
 ): UploadFileInput[] {
-
   return optimizedMedia.map((optimized, index) => ({
     file: optimized.file,
 
@@ -341,7 +310,6 @@ function prepareMediaUploads(
   }));
 }
 
-
 // ============================================================
 // PREPARE THUMBNAIL UPLOADS
 // ============================================================
@@ -350,11 +318,9 @@ function prepareThumbnailUploads(
   media: LocalMedia[],
   thumbnails: (OptimizedFile | null | undefined)[],
   category: string,
-  postId: string
+  postId: string,
 ): UploadFileInput[] {
-
   return thumbnails.flatMap((thumbnail, index) => {
-
     if (!thumbnail) {
       return [];
     }
@@ -375,25 +341,17 @@ function prepareThumbnailUploads(
   });
 }
 
-
 // ============================================================
 // VALIDATE UPLOADS
 // ============================================================
 
-function validateUploads(
-  uploads: Awaited<ReturnType<typeof UploadFiles>>
-) {
-  const failed = uploads.some(
-    (file) => file.error !== null
-  );
+function validateUploads(uploads: Awaited<ReturnType<typeof UploadFiles>>) {
+  const failed = uploads.some((file) => file.error !== null);
 
   if (failed) {
-    throw new Error(
-      "Failed to upload one or more files"
-    );
+    throw new Error("Failed to upload one or more files");
   }
 }
-
 
 // ============================================================
 // FIND UPLOADED FILE
@@ -401,33 +359,23 @@ function validateUploads(
 
 function getUploadedFile(
   media: LocalMedia,
-  uploadedFiles: Awaited<
-    ReturnType<typeof UploadFiles>
-  >,
-  fileMedia: LocalMedia[]
+  uploadedFiles: Awaited<ReturnType<typeof UploadFiles>>,
+  fileMedia: LocalMedia[],
 ) {
-
-  const index = fileMedia.findIndex(
-    (file) => file.order === media.order
-  );
+  const index = fileMedia.findIndex((file) => file.order === media.order);
 
   if (index === -1) {
-    throw new Error(
-      `File not found for media order ${media.order}`
-    );
+    throw new Error(`File not found for media order ${media.order}`);
   }
 
   const uploaded = uploadedFiles[index];
 
   if (!uploaded?.data) {
-    throw new Error(
-      `Upload failed for media order ${media.order}`
-    );
+    throw new Error(`Upload failed for media order ${media.order}`);
   }
 
   return uploaded;
 }
-
 
 // ============================================================
 // FIND UPLOADED THUMBNAIL
@@ -435,24 +383,19 @@ function getUploadedFile(
 
 function getUploadedThumbnail(
   media: LocalMedia,
-  uploadedThumbnails: Awaited<
-    ReturnType<typeof UploadFiles>
-  >,
-  thumbnailUploads: UploadFileInput[]
+  uploadedThumbnails: Awaited<ReturnType<typeof UploadFiles>>,
+  thumbnailUploads: UploadFileInput[],
 ) {
-
   const index = thumbnailUploads.findIndex(
-    (thumbnail) =>
-      thumbnail.order === media.order
+    (thumbnail) => thumbnail.order === media.order,
   );
 
   if (index === -1) {
     return null;
   }
 
-  return uploadedThumbnails[index]?.data?.ufsUrl ?? null;
+  return uploadedThumbnails[index]?.data ?? null;
 }
-
 
 // ============================================================
 // CREATE PRISMA MEDIA
@@ -461,15 +404,10 @@ function getUploadedThumbnail(
 function createMediaData(
   media: MediaInput,
   fileMedia: LocalMedia[],
-  uploadedFiles: Awaited<
-    ReturnType<typeof UploadFiles>
-  >,
-  uploadedThumbnails: Awaited<
-    ReturnType<typeof UploadFiles>
-  >,
-  thumbnailUploads: UploadFileInput[]
+  uploadedFiles: Awaited<ReturnType<typeof UploadFiles>>,
+  uploadedThumbnails: Awaited<ReturnType<typeof UploadFiles>>,
+  thumbnailUploads: UploadFileInput[],
 ) {
-
   // ----------------------------------------------------------
   // YOUTUBE
   // ----------------------------------------------------------
@@ -477,69 +415,49 @@ function createMediaData(
   if (media.type === "youtube") {
     return {
       kind: "youtube" as const,
-
       videoId: media.videoId,
-
       order: media.order,
     };
   }
-
 
   // ----------------------------------------------------------
   // LOCAL FILE
   // ----------------------------------------------------------
 
-  const uploaded = getUploadedFile(
-    media,
-    uploadedFiles,
-    fileMedia
-  );
-
+  const uploaded = getUploadedFile(media, uploadedFiles, fileMedia);
 
   // ----------------------------------------------------------
   // THUMBNAIL
   // ----------------------------------------------------------
 
-  const generatedThumbnail =
-    getUploadedThumbnail(
-      media,
-      uploadedThumbnails,
-      thumbnailUploads
-    );
+  const thumbnail = getUploadedThumbnail(
+    media,
+    uploadedThumbnails,
+    thumbnailUploads,
+  );
 
+  const poster = media.poster ?? thumbnail?.ufsUrl ?? null;
 
-  /**
-   * Priority:
-   *
-   * 1. Poster enviado manualmente
-   * 2. Thumbnail generado automáticamente
-   * 3. null
-   */
-  const poster =
-    media.poster ??
-    generatedThumbnail ??
-    null;
-
+  const thumbnailFileKey = thumbnail?.key ?? null;
 
   return {
     kind: media.type,
-
     width: media.width,
-
     height: media.height,
-
     aspectRatio: media.aspectRatio,
-
     alt: media.alt,
 
     poster,
 
     src: uploaded.data.ufsUrl,
 
+    // UploadThing
+    fileKey: uploaded.data.key,
+    thumbnailFileKey,
+
     order: media.order,
   };
 }
-
 
 // ============================================================
 // CREATE POST
@@ -547,199 +465,181 @@ function createMediaData(
 
 export async function createPost(
   data: CreatePostInput,
-  size: FileSize = "small"
+  size: FileSize = "small",
 ) {
-
   const postId = crypto.randomUUID();
 
-
   try {
-
     // ========================================================
     // 1. LOCAL MEDIA
     // ========================================================
 
-    const fileMedia = getLocalMedia(
-      data.media
-    );
-
+    const fileMedia = getLocalMedia(data.media);
 
     // ========================================================
     // 2. OPTIMIZE
     // ========================================================
 
-    const optimizedMedia =
-      await optimizeMediaFiles(
-        fileMedia,
-        size
-      );
-
+    const optimizedMedia = await optimizeMediaFiles(fileMedia, size);
 
     // ========================================================
     // 3. GENERATE THUMBNAILS
     // ========================================================
 
-    const thumbnails =
-      await generateVideoThumbnails(
-        fileMedia,
-        optimizedMedia
-      );
-
+    const thumbnails = await generateVideoThumbnails(fileMedia, optimizedMedia);
 
     // ========================================================
     // 4. PREPARE UPLOADS
     // ========================================================
 
-    const mediaUploads =
-      prepareMediaUploads(
-        fileMedia,
-        optimizedMedia,
-        data.categoryId,
-        postId
-      );
+    const mediaUploads = prepareMediaUploads(
+      fileMedia,
+      optimizedMedia,
+      data.categoryId,
+      postId,
+    );
 
-
-    const thumbnailUploads =
-      prepareThumbnailUploads(
-        fileMedia,
-        thumbnails,
-        data.categoryId,
-        postId
-      );
-
+    const thumbnailUploads = prepareThumbnailUploads(
+      fileMedia,
+      thumbnails,
+      data.categoryId,
+      postId,
+    );
 
     // ========================================================
     // 5. UPLOAD MEDIA
     // ========================================================
 
-    const uploadedFiles =
-      await UploadFiles(
-        mediaUploads
-      );
+    const uploadedFiles = await UploadFiles(mediaUploads);
 
-    validateUploads(
-      uploadedFiles
-    );
-
+    validateUploads(uploadedFiles);
 
     // ========================================================
     // 6. UPLOAD THUMBNAILS
     // ========================================================
 
     const uploadedThumbnails =
-      thumbnailUploads.length > 0
-        ? await UploadFiles(
-            thumbnailUploads
-          )
-        : [];
-
+      thumbnailUploads.length > 0 ? await UploadFiles(thumbnailUploads) : [];
 
     if (thumbnailUploads.length > 0) {
-      validateUploads(
-        uploadedThumbnails
-      );
+      validateUploads(uploadedThumbnails);
     }
-
 
     // ========================================================
     // 7. CREATE POST
     // ========================================================
 
-    return await prisma.$transaction(
-      async (tx) => {
+    return await prisma.$transaction(async (tx) => {
+      const post = await tx.post.create({
+        data: {
+          id: postId,
 
-        const post =
-          await tx.post.create({
+          userId: data.userId,
 
-            data: {
+          title: data.title,
 
-              id: postId,
+          description: data.description,
 
-              userId: data.userId,
+          visibility: data.visibility,
 
-              title: data.title,
+          allowInteractions: data.allowInteractions,
 
-              description: data.description,
+          categoryId: data.categoryId,
 
-              visibility: data.visibility,
+          // ----------------------------------------------
+          // TOPICS
+          // ----------------------------------------------
 
-              allowInteractions:
-                data.allowInteractions,
+          topics: {
+            connect: data.topicIds.map((id) => ({
+              id,
+            })),
+          },
 
-              categoryId:
-                data.categoryId,
+          // ----------------------------------------------
+          // MEDIA
+          // ----------------------------------------------
 
+          media: {
+            create: data.media.map((media) =>
+              createMediaData(
+                media,
 
-              // ----------------------------------------------
-              // TOPICS
-              // ----------------------------------------------
+                fileMedia,
 
-              topics: {
+                uploadedFiles,
 
-                connect:
-                  data.topicIds.map(
-                    (id) => ({
-                      id,
-                    })
-                  ),
-              },
+                uploadedThumbnails,
 
+                thumbnailUploads,
+              ),
+            ),
+          },
+        },
 
-              // ----------------------------------------------
-              // MEDIA
-              // ----------------------------------------------
+        // ----------------------------------------------
+        // INCLUDE
+        // ----------------------------------------------
 
-              media: {
+        include: {
+          category: true,
 
-                create: data.media.map(
-                  (media) =>
-                    createMediaData(
-                      media,
+          topics: true,
 
-                      fileMedia,
-
-                      uploadedFiles,
-
-                      uploadedThumbnails,
-
-                      thumbnailUploads
-                    )
-                ),
-              },
+          media: {
+            orderBy: {
+              order: "asc",
             },
+          },
+        },
+      });
 
-
-            // ----------------------------------------------
-            // INCLUDE
-            // ----------------------------------------------
-
-            include: {
-
-              category: true,
-
-              topics: true,
-
-              media: {
-
-                orderBy: {
-                  order: "asc",
-                },
-              },
-            },
-          });
-
-
-        return post;
-      }
-    );
-
+      return post;
+    });
   } catch (error) {
-
-    console.error(
-      "createPost error:",
-      error
-    );
+    console.error("createPost error:", error);
 
     throw error;
   }
+}
+
+export async function deletePost(postId: string) {
+  const post = await prisma.post.findUnique({
+    where: {
+      id: postId,
+    },
+    include: {
+      media: true,
+    },
+  });
+
+  if (!post) {
+    return null;
+  }
+
+  const fileKeys = post.media.flatMap((media) => {
+    const keys: string[] = [];
+
+    if (media.fileKey) {
+      keys.push(media.fileKey);
+    }
+
+    if (media.thumbnailFileKey) {
+      keys.push(media.thumbnailFileKey);
+    }
+
+    return keys;
+  });
+
+  // Eliminar archivos de UploadThing
+  if (fileKeys.length > 0) {
+    await utapi.deleteFiles(fileKeys);
+  }
+
+  // Eliminar post y sus Media
+  return prisma.post.delete({
+    where: {
+      id: postId,
+    },
+  });
 }

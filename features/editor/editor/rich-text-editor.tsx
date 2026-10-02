@@ -39,8 +39,40 @@ const theme = {
     italic: 'italic',
   },
 };
+
+import { TRANSFORMERS } from '@lexical/markdown';
+import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { useEditorStore } from '@/app/[locale]/dashboard/blog/create/page';
+import { FilePlusIcon } from '@radix-ui/react-icons';
+
+import {
+  HEADING,
+  ORDERED_LIST,
+  UNORDERED_LIST,
+  QUOTE,
+  BOLD_STAR,
+  BOLD_UNDERSCORE,
+  ITALIC_STAR,
+  ITALIC_UNDERSCORE,
+} from '@lexical/markdown';
+
+const MARKDOWN_TRANSFORMERS = [
+  HEADING,
+  ORDERED_LIST,
+  UNORDERED_LIST,
+  QUOTE,
+  BOLD_STAR,
+  BOLD_UNDERSCORE,
+  ITALIC_STAR,
+  ITALIC_UNDERSCORE,
+];
+import { MarkdownPastePlugin, MarkdownPlugin } from './plugins/markdown-plugin';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { MarkdownPdfUploadForm } from '../markdown-pdf-upload-form';
+import { MarkdownImportPlugin } from './plugins/MarkdownImportPlugin';
+import TextAssistent from '../text-assistant';
+import { MarkdownAssistant } from '../markdown-assistant';
 const editorExtension = defineExtension({
   dependencies: [
     RichTextExtension,
@@ -50,20 +82,27 @@ const editorExtension = defineExtension({
     ClickAfterLastBlockExtension,
     SelectBlockExtension,
     CodeMirrorExtension,
-    ImageExtension
+    MarkdownPlugin,
+    ImageExtension,
+    MarkdownShortcutPlugin
   ],
   name: '@lexical/website/notion-like-editor',
   namespace: '@lexical/website/notion-like-editor',
   theme,
 });
 export default function Editor() {
+  const [markdownToImport, setMarkdownToImport] =
+    useState<string | null>(null);
+  const [open, setOpen] = useState<boolean>(false)
   const [anchorElem, setAnchorElem] = useState<HTMLElement | null>(null);
   const setJson = useEditorStore((state => state.setJson))
   return (
     <LexicalExtensionComposer
       extension={editorExtension}
-      contentEditable={null}>
+      contentEditable={null}
+    >
       <div className="relative min-w-0 max-w-full overflow-hidden rounded-lg border border-input bg-secondary">
+
         <div
           className="relative min-w-0 max-w-full"
           ref={setAnchorElem}
@@ -76,20 +115,76 @@ export default function Editor() {
               <div className="pointer-events-none absolute top-[22px] left-8 select-none text-[0.95rem] text-muted-foreground">
                 Type &apos;/&apos; for commands...
               </div>
-            } 
+            }
           />
+          <MarkdownPastePlugin />
+          <MarkdownShortcutPlugin transformers={MARKDOWN_TRANSFORMERS} />
+
           <OnChangePlugin
             onChange={(editorState) => {
               const json = editorState.toJSON();
-
-              setJson(JSON.stringify(json))
+              setJson(JSON.stringify(json));
             }}
           />
+
           <SlashMenuPlugin />
-          {anchorElem ? <DragPlugin anchorElem={anchorElem} /> : null}
+
+          {anchorElem ? (
+            <DragPlugin anchorElem={anchorElem} />
+          ) : null}
         </div>
-        <div className='absolute bottom-3 right-3'><Button className=" flex items-center justify-center p-3" variant={'outline'}><SparklesIcon className='font-extralight' /></Button></div>
+        <div className="absolute flex bottom-3 right-3">
+          <div className="absolute bottom-3 right-3 flex gap-2">
+            <Dialog onOpenChange={(open) => setOpen(open)} open={open}>
+              <DialogTrigger 
+                render={
+                  <Button
+                  onClick={() => setOpen(true)}
+                    className="flex items-center justify-center p-3"
+                    variant="outline"
+                  >
+                    <FilePlusIcon className="font-extralight" />
+                  </Button>
+                }
+              />
+
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>
+                    Upload a PDF or Markdown File
+                  </DialogTitle>
+                </DialogHeader>
+
+                <MarkdownPdfUploadForm
+                  onMarkdown={(markdown) => {
+                    setMarkdownToImport(markdown);
+                    setOpen(false)
+                  }}
+                />
+              </DialogContent>
+            </Dialog>
+
+           <Dialog >
+            <DialogTrigger render={ <Button
+              className="flex items-center justify-center p-3"
+              variant="outline"
+            >
+              <SparklesIcon className="font-extralight" />
+            </Button>}/>
+            <DialogContent  className={" [&>button]:hidden ring-0 bg-transparent p-2 xl:max-w-[550px] h-[70vh] scrollbar-none"}>
+              {/* <DialogHeader><DialogTitle>Text assistent</DialogTitle></DialogHeader> */}
+              <MarkdownAssistant/>
+            </DialogContent>
+           </Dialog>
+          </div>
+        </div>
       </div>
+      <MarkdownImportPlugin
+        markdown={markdownToImport}
+        onImported={() => {
+          setMarkdownToImport(null);
+        }}
+      />
     </LexicalExtensionComposer>
   );
 }

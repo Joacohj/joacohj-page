@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   $getSelection,
@@ -10,9 +10,12 @@ import {
   defineExtension,
   type LexicalEditor,
   type PasteCommandType,
-} from 'lexical';
+} from "lexical";
 
-import { ImageNode, $createImageNode } from './image-node';
+import {
+  ImageNode,
+  $createImageNode,
+} from "./image-node";
 
 export type ImageUploadResult = {
   src: string;
@@ -29,9 +32,11 @@ export type ImageExtensionConfig = {
   uploadImage: ImageUploadFunction;
 };
 
-function getImageFiles(dataTransfer: DataTransfer): File[] {
-  return Array.from(dataTransfer.files).filter((file) =>
-    file.type.startsWith('image/'),
+function getImageFiles(
+  dataTransfer: DataTransfer,
+): File[] {
+  return Array.from(dataTransfer.files).filter(
+    (file) => file.type.startsWith("image/"),
   );
 }
 
@@ -48,7 +53,7 @@ function insertImage(
 
     const imageNode = $createImageNode(
       image.src,
-      image.altText ?? '',
+      image.altText ?? "",
       image.width,
       image.height,
     );
@@ -57,7 +62,7 @@ function insertImage(
   });
 }
 
-async function uploadAndInsert(
+export async function uploadAndInsertImage(
   editor: LexicalEditor,
   file: File,
   uploadImage: ImageUploadFunction,
@@ -67,7 +72,10 @@ async function uploadAndInsert(
 
     insertImage(editor, image);
   } catch (error) {
-    console.error('Failed to upload image:', error);
+    console.error(
+      "Failed to upload image:",
+      error,
+    );
   }
 }
 
@@ -80,7 +88,9 @@ function handleDrop(
     return false;
   }
 
-  const files = getImageFiles(event.dataTransfer);
+  const files = getImageFiles(
+    event.dataTransfer,
+  );
 
   if (files.length === 0) {
     return false;
@@ -89,7 +99,7 @@ function handleDrop(
   event.preventDefault();
 
   for (const file of files) {
-    void uploadAndInsert(
+    void uploadAndInsertImage(
       editor,
       file,
       uploadImage,
@@ -114,8 +124,8 @@ function handlePaste(
     return false;
   }
 
-  const files = Array.from(clipboardData.files).filter(
-    (file) => file.type.startsWith('image/'),
+  const files = getImageFiles(
+    clipboardData,
   );
 
   if (files.length === 0) {
@@ -125,7 +135,7 @@ function handlePaste(
   event.preventDefault();
 
   for (const file of files) {
-    void uploadAndInsert(
+    void uploadAndInsertImage(
       editor,
       file,
       uploadImage,
@@ -139,32 +149,34 @@ export function createImageExtension(
   config: ImageExtensionConfig,
 ) {
   return defineExtension({
-    name: '@my-app/image',
+    name: "@my-app/image",
 
     nodes: () => [ImageNode],
 
     register: (editor) => {
-      const unregisterDrop = editor.registerCommand(
-        DROP_COMMAND,
-        (event) =>
-          handleDrop(
-            editor,
-            config.uploadImage,
-            event,
-          ),
-        COMMAND_PRIORITY_HIGH,
-      );
+      const unregisterDrop =
+        editor.registerCommand(
+          DROP_COMMAND,
+          (event) =>
+            handleDrop(
+              editor,
+              config.uploadImage,
+              event,
+            ),
+          COMMAND_PRIORITY_HIGH,
+        );
 
-      const unregisterPaste = editor.registerCommand(
-        PASTE_COMMAND,
-        (event) =>
-          handlePaste(
-            editor,
-            config.uploadImage,
-            event,
-          ),
-        COMMAND_PRIORITY_HIGH,
-      );
+      const unregisterPaste =
+        editor.registerCommand(
+          PASTE_COMMAND,
+          (event) =>
+            handlePaste(
+              editor,
+              config.uploadImage,
+              event,
+            ),
+          COMMAND_PRIORITY_HIGH,
+        );
 
       return () => {
         unregisterDrop();
@@ -174,13 +186,17 @@ export function createImageExtension(
   });
 }
 
-export const ImageExtension = createImageExtension({
-  uploadImage: async (file) => {
+export const uploadImage: ImageUploadFunction =
+  async (file) => {
     const src = URL.createObjectURL(file);
 
     return {
       src,
       altText: file.name,
     };
-  },
-});
+  };
+
+export const ImageExtension =
+  createImageExtension({
+    uploadImage,
+  });

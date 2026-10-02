@@ -43,7 +43,6 @@ type BlogContentProps = {
 export default function BlogContent({
     jsonContent,
 }: BlogContentProps) {
-    console.log(jsonContent)
     const blogExtension = defineExtension({
         name: '@my-app/blog-viewer',
 

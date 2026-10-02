@@ -19,19 +19,46 @@ export async function getBlogPosts() {
 }
 
 
-export async function getPublicBlogPosts() {
-  const getCachedBlogPosts = unstable_cache(async () => {
-    return prisma.blogPost.findMany({
-      where: {
-        visibility: 'public'
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-  });
+export async function getPublicBlogPosts(  cursor: string | null,
+  limit: number) {
+ const getCachedPosts = unstable_cache(
+    async () => {
+      return prisma.blogPost.findMany({
+        take: limit + 1,
 
-  return getCachedBlogPosts();
+        ...(cursor
+          ? {
+              skip: 1,
+              cursor: {
+                id: cursor,
+              },
+            }
+          : {}),
+
+        where: {
+          visibility: "public",
+        },
+
+        orderBy: {
+          createdAt: "desc",
+        },
+
+        include: {
+          category: true,
+          topics: true,
+
+        },
+      });
+    },
+
+    ["blog-posts", cursor ?? "first-page", String(limit)],
+
+    {
+      revalidate: 60,
+    }
+  );
+
+  return getCachedPosts();
 }
 
 type CreatePostInput = {

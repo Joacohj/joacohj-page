@@ -24,12 +24,10 @@ export function CodeMirrorEditor({ nodeKey }: Props) {
       editor.getEditorState().read(() => {
         const node = $getNodeByKey(nodeKey);
 
-        console.log("NODE:", node);
 
         if ($isCodeMirrorNode(node)) {
           const value = node.getCode();
 
-          console.log("CODE FROM NODE:", value);
 
           setCode(value);
         }

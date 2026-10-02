@@ -8,39 +8,25 @@ services:
 
     ports:
       - "3000:3000"
-    command: sleep infinity
-    env_file: 
+
+    env_file:
       - .env
+
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/mydb
-      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
-      BETTER_AUTH_URL: http://localhost:3000
-      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
-      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
-      MAILTRAP_API_TOKEN: ${MAILTRAP_API_TOKEN}
-      RESEND_API_KEY: ${RESEND_API_KEY}
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/myapp
+      MINERU_URL: http://mineru:8000
+
     volumes:
       - ./:/app
       - /app/node_modules
 
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+      mineru:
+        condition: service_healthy
 
-    # command: npm run dev -- --hostname 0.0.0.0
-    develop:
-      watch:
-        # package.json → rebuild completo
-        - action: rebuild
-          path: ./package.json
-
-        # package-lock.json → también rebuild
-        - action: rebuild
-          path: ./package-lock.json
-
-        # Todo lo demás → sync
-        - action: sync
-          path: ./
-          target: /app
+    command: sleep infinity
 
   db:
     image: postgres:18
@@ -54,11 +40,52 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: myapp
 
-    ports:
-      - "5432:5432"
-
     volumes:
       - postgres_data:/var/lib/postgresql
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U postgres -d myapp"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  mineru:
+    build:
+      context: ./docker/mineru
+      dockerfile: Dockerfile
+
+    container_name: mineru
+
+    ports:
+      - "8000:8000"
+
+    command:
+      - api-server
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --tier
+      - basic
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:8000/v1/health"
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
 
 volumes:
   postgres_data:

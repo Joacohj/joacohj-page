@@ -8,7 +8,7 @@ export default async function Post({
     params: Promise<{ postId: string }>;
 }) {
     const { postId } = await params;
-    const posts = await getPublicBlogPosts();
+    const posts = await getPublicBlogPosts(null, 0);
     const post = posts.find(post => post.id === postId)
 
     if(!post?.id) {

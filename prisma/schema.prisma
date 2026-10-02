@@ -111,16 +111,18 @@ enum FileSize {
 }
 
 model Media {
-  id          String    @id @default(uuid())
-  kind        MediaKind @default(image)
-  src         String?
-  videoId     String?
-  poster      String?
-  width       Int?
-  height      Int?
-  aspectRatio Float?
-  alt         String?
-  order       Int
+  id               String    @id @default(uuid())
+  kind             MediaKind @default(image)
+  fileKey          String?
+  thumbnailFileKey String?
+  src              String?
+  videoId          String?
+  poster           String?
+  width            Int?
+  height           Int?
+  aspectRatio      Float?
+  alt              String?
+  order            Int
 
   postId String?
   post   Post?   @relation(fields: [postId], references: [id])
